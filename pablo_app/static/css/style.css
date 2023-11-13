@@ -1,0 +1,54 @@
+#greeting {
+    color: blue;
+}
+
+#content-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: max(20vh, 120px);
+}
+
+#work {
+    user-select: none;
+    background: #203aad;
+}
+
+#work:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+#left-button-block {
+    display: flex;
+    align-items: center;
+    margin-right: max(10vw, 120px);
+}
+
+#left-button-img {
+    margin: auto;
+    user-select: none;
+    display: block;
+}
+
+#right-button-block {
+    display: flex;
+    align-items: center;
+    margin-left: max(10vw, 120px);
+}
+
+#right-button-img {
+    margin: auto;
+    user-select: none;
+    display: block;
+}
+
+.zoom-in {
+    transition: 0.2s;
+}
+
+.zoom-in:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
