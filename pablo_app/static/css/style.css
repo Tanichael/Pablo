@@ -11,10 +11,10 @@
 
 #work {
     user-select: none;
-    background: #203aad;
+    background: rgb(109, 1, 1);
 }
 
-#work:hover {
+#work:hover{
     cursor: pointer;
     opacity: 0.5;
     transition: 0.3s;
