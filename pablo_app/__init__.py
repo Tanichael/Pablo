@@ -1,42 +1,58 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
+import random
 
 db = SQLAlchemy()
 app = Flask(__name__, static_folder="./static/")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 db.init_app(app)
 
-# api = Api(app, doc='/doc/')
-
-# @api.route('/hello/<name>/<email>')
-# class Hello(Resource):
-#     def get(self, name, email):
-#         return {
-#             "name": name,
-#             "email": email
-#         }
-
-#     def post(self, name, email):
-#         body = request.json
-#         return {
-#             "name": name,
-#             "email": email,
-#             "body": body,
-#         }
-
-
 @app.route('/')
-@app.route('/<name>')
 def index(name=None):
-  return render_template('index.html', name=name)
-
+  return render_template('index.html')
 
 @app.route('/users')
 def users():
-  print(request.method)
-  return "<p>Users</p>"
+    print(request.method)
+    return "<p>Users</p>"
 
+@app.route('/img/icons/<path:filename>')
+def img_icon(filename):
+    return send_from_directory('img/icons', filename)
+
+@app.route('/img/works/<path:filename>')
+def img_work(filename):
+    return send_from_directory('img/works', filename)
+
+@app.route('/work/<int:id>')
+def work(id=1):
+    works = db.session.execute(db.select(Work)).scalars().all()
+    if id <= 0 or id > len(works):
+        id = (id - 1 + len(works)) % len(works) + 1
+    print(f'id: {id}')
+    work = db.session.execute(db.select(Work).filter_by(id=id)).scalar_one()
+    return {
+        "id": work.id,
+        "title": work.title,
+        "creator": work.creator,
+        "description": work.description
+    }
+
+@app.route('/work/random/<int:bef_id>')
+def work_random(bef_id):
+    works = db.session.execute(db.select(Work)).scalars().all()
+    rand_id = bef_id
+    while rand_id == bef_id:
+        rand_id = random.randint(1, len(works))    
+    print(f'rand_id: {rand_id}')
+    work = db.session.execute(db.select(Work).filter_by(id=rand_id)).scalar_one()
+    return {
+        "id": work.id,
+        "title": work.title,
+        "creator": work.creator,
+        "description": work.description
+    }
 
 class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
