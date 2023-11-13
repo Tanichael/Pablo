@@ -7,17 +7,21 @@
     justify-content: center;
     align-items: center;
     margin-top: max(20vh, 120px);
+    user-select: none;
 }
 
 #work {
-    user-select: none;
     background: rgb(109, 1, 1);
+    user-drag: none;
+    -webkit-user-drag: none;
+    -moz-user-select: none;
+    transition: 0.3s;
 }
 
 #work:hover{
     cursor: pointer;
     opacity: 0.5;
-    transition: 0.3s;
+    transform: scale(1.05);
 }
 
 #left-button-block {
