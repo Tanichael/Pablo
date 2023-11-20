@@ -8,51 +8,63 @@ app = Flask(__name__, static_folder="./static/")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 db.init_app(app)
 
+
 @app.route('/')
 def index():
   return render_template('index.html')
 
+
+@app.route('/description')
+def description():
+  return render_template('description.html')
+
+
 @app.route('/users')
 def users():
-    print(request.method)
-    return "<p>Users</p>"
+  print(request.method)
+  return "<p>Users</p>"
+
 
 @app.route('/img/icons/<path:filename>')
 def img_icon(filename):
-    return send_from_directory('img/icons', filename)
+  return send_from_directory('img/icons', filename)
+
 
 @app.route('/img/works/<path:filename>')
 def img_work(filename):
-    return send_from_directory('img/works', filename)
+  return send_from_directory('img/works', filename)
+
 
 @app.route('/work/<int:id>')
 def work(id=1):
-    works = db.session.execute(db.select(Work)).scalars().all()
-    if id <= 0 or id > len(works):
-        id = (id - 1 + len(works)) % len(works) + 1
-    print(f'id: {id}')
-    work = db.session.execute(db.select(Work).filter_by(id=id)).scalar_one()
-    return {
-        "id": work.id,
-        "title": work.title,
-        "creator": work.creator,
-        "description": work.description
-    }
+  works = db.session.execute(db.select(Work)).scalars().all()
+  if id <= 0 or id > len(works):
+    id = (id - 1 + len(works)) % len(works) + 1
+  print(f'id: {id}')
+  work = db.session.execute(db.select(Work).filter_by(id=id)).scalar_one()
+  return {
+      "id": work.id,
+      "title": work.title,
+      "creator": work.creator,
+      "description": work.description
+  }
+
 
 @app.route('/work/random/<int:bef_id>')
 def work_random(bef_id):
-    works = db.session.execute(db.select(Work)).scalars().all()
-    rand_id = bef_id
-    while rand_id == bef_id:
-        rand_id = random.randint(1, len(works))    
-    print(f'rand_id: {rand_id}')
-    work = db.session.execute(db.select(Work).filter_by(id=rand_id)).scalar_one()
-    return {
-        "id": work.id,
-        "title": work.title,
-        "creator": work.creator,
-        "description": work.description
-    }
+  works = db.session.execute(db.select(Work)).scalars().all()
+  rand_id = bef_id
+  while rand_id == bef_id:
+    rand_id = random.randint(1, len(works))
+  print(f'rand_id: {rand_id}')
+  work = db.session.execute(db.select(Work).filter_by(id=rand_id)).scalar_one()
+  return {
+      "id": work.id,
+      "title": work.title,
+      "creator": work.creator,
+      "description": work.description
+  }
+
 
 class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     tempId = workData.id;
 
     workElement.addEventListener('click', () => {
-        // workElement.src = "../static/img/works/1.jpg"
+       //workElement.src = "../static/img/works/1.jpg"
     });
     
     leftButton.addEventListener('click', async () => {

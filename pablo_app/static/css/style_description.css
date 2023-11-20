@@ -11,12 +11,42 @@
     height: 500px;
 }
 
-
-#work:hover {
-    cursor: pointer;
-    opacity: 0.5;
-    transform: scale(1.05);
+#text { 
+    font-family: 'Shippori Mincho', serif;
+    letter-spacing:normal;
+    line-height: 100%;
+    width: 1000px;
+    border-top: 5px gray inset;
+    border-right: 5px gray double;
+    border-bottom: 5px gray double;
+    border-left: 5px gray inset; 
 }
+
+#title{
+  font-size: 54px;
+  font-weight: bold;
+  text-align:center;
+}
+
+
+#creator{
+  font-size: 28px;
+  text-align:center;
+}
+
+
+
+#description{
+  font-size: 24px;
+  font-weight: normal;
+  margin-right:10%;
+  margin-left:10%;
+  text-align:center;
+  line-height:200%;/*textと行間の指示が被ってるので後で直す？*/
+}
+
+
+
 
 #left-button-block {
     display: flex;
