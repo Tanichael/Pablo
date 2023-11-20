@@ -1,11 +1,10 @@
-#greeting {
+/*#greeting {
     color: blue;
 }
+*/
 
 #content-block {
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-top: max(20vh, 120px);
     user-select: none;
     height: 500px;
@@ -40,6 +39,22 @@
     margin: auto;
     user-select: none;
     display: block;
+}
+
+#work-block{
+  top:0px;
+  align-content:center;
+}
+
+#work{
+  
+}
+
+#title_home{
+  text-align:center;
+}
+#creator_home{
+  text-align:center;
 }
 
 .zoom-in {
