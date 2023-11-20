@@ -45,7 +45,10 @@ def work(id=1):
   return {
       "id": work.id,
       "title": work.title,
-      "creator": work.creator,
+      "creator": {
+        "id": work.creator.id,
+        "name": work.creator.name
+      },
       "description": work.description
   }
 
@@ -61,23 +64,31 @@ def work_random(bef_id):
   return {
       "id": work.id,
       "title": work.title,
-      "creator": work.creator,
+      "creator": {
+        "id": work.creator.id,
+        "name": work.creator.name
+      },
       "description": work.description
   }
 
-
-class User(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  user_name = db.Column(db.String, nullable=False)
-  email = db.Column(db.String, nullable=False)
-  password = db.Column(db.String, nullable=False)
-
+# class User(db.Model):
+#   id = db.Column(db.Integer, primary_key=True)
+#   user_name = db.Column(db.String, nullable=False)
+#   email = db.Column(db.String, nullable=False)
+#   password = db.Column(db.String, nullable=False)
 
 class Work(db.Model):
+  __tablename__ = "works"
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String, nullable=False)
-  creator = db.Column(db.String, nullable=False)
+  creator_id = db.Column(db.String, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
   description = db.Column(db.String, nullable=False)
+  creator = db.relationship('Creator')
+
+class Creator(db.Model):
+  __tablename__ = "creators"
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String, nullable=False)
 
 
 # @app.route("/user")
