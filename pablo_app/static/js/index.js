@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const leftButton = document.getElementById('left-button-img');
     const rightButton = document.getElementById('right-button-img');
     const workElement = document.getElementById('work');
-
+  
     const workBlockManager = new WorkBlockManager(connectionClient, workElement, leftButton, rightButton);
 });
 

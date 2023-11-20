@@ -11,20 +11,42 @@
     height: 500px;
 }
 
-#work {
-    -webkit-user-drag: none;
+#text { 
+    font-family: 'Shippori Mincho', serif;
+    letter-spacing:normal;
+    line-height: 100%;
+    width: 1000px;
+    border-top: 5px gray inset;
+    border-right: 5px gray double;
+    border-bottom: 5px gray double;
+    border-left: 5px gray inset; 
 }
 
-#work-block {
-    -webkit-user-drag: none;
-    transition: 0.3s;
+#title{
+  font-size: 54px;
+  font-weight: bold;
+  text-align:center;
 }
 
-#work-block:hover {
-    cursor: pointer;
-    opacity: 0.5;
-    transform: scale(1.05);
+
+#creator{
+  font-size: 28px;
+  text-align:center;
 }
+
+
+
+#description{
+  font-size: 24px;
+  font-weight: normal;
+  margin-right:10%;
+  margin-left:10%;
+  text-align:center;
+  line-height:200%;/*textと行間の指示が被ってるので後で直す？*/
+}
+
+
+
 
 #left-button-block {
     display: flex;
