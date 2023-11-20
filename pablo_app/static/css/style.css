@@ -13,10 +13,14 @@
 
 #work {
     -webkit-user-drag: none;
+}
+
+#work-block {
+    -webkit-user-drag: none;
     transition: 0.3s;
 }
 
-#work:hover {
+#work-block:hover {
     cursor: pointer;
     opacity: 0.5;
     transform: scale(1.05);
