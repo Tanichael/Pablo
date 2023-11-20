@@ -11,8 +11,16 @@
     height: 500px;
 }
 
+#work {
+    -webkit-user-drag: none;
+}
 
-#work:hover {
+#work-block {
+    -webkit-user-drag: none;
+    transition: 0.3s;
+}
+
+#work-block:hover {
     cursor: pointer;
     opacity: 0.5;
     transform: scale(1.05);

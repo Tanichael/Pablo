@@ -1,32 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    let tempId = 0;
     const connectionClient = new ConnectionClient();
 
     const leftButton = document.getElementById('left-button-img');
     const rightButton = document.getElementById('right-button-img');
-    // const workBlock = document.getElementById('work-block');
-    // const workElement = document.createElement('img');
     const workElement = document.getElementById('work');
-    // workElement.id = "work";
-    // workElement.width = "300"
-    // workBlock.appendChild(workElement);
-
-    const workData = await setRandWork(connectionClient, workElement, tempId);
-    tempId = workData.id;
-
-    workElement.addEventListener('click', () => {
-       //workElement.src = "../static/img/works/1.jpg"
-    });
-    
-    leftButton.addEventListener('click', async () => {
-        const workData = await setWork(connectionClient, workElement, tempId-1);
-        tempId = workData.id;
-    });
-
-    rightButton.addEventListener('click', async () => {
-        const workData = await setWork(connectionClient, workElement, tempId+1);
-        tempId = workData.id;
-    });
+  
+    const workBlockManager = new WorkBlockManager(connectionClient, workElement, leftButton, rightButton);
 });
 
 class ConnectionClient {
@@ -55,18 +34,81 @@ class ConnectionClient {
     }
 }
 
-async function setWork(connectionClient, workElement, id) {
-    const workData = await connectionClient.getWork(id);
-    workElement.src = getWorkUrlWithId(workData.id);
-    return workData;
+class WorkBlockManager {
+    constructor(connectionClient, workElement, leftButton, rightButton) {
+        this.workElementManager = new WorkElementManager(connectionClient, workElement);
+        this.descriptionElementManager = new DescriptionElementManager(connectionClient);
+
+        leftButton.addEventListener('click', async () => {
+            const workData = await this.workElementManager.getWork(this.workElementManager.getTempId()-1);
+        });
+    
+        rightButton.addEventListener('click', async () => {
+            const workData = await this.workElementManager.getWork(this.workElementManager.getTempId()+1);
+        });
+
+        workElement.addEventListener('click', () => {
+            console.log("work elemnt");
+        });
+    }
 }
 
-async function setRandWork(connectionClient, workElement, befId) {
-    const workData = await connectionClient.getRandWork(befId);
-    workElement.src = getWorkUrlWithId(workData.id);
-    return workData;
+class DescriptionElementManager {
+    constructor(connectionClient) {
+        console.log("description manager");
+    }
 }
 
-function getWorkUrlWithId(id) {
-    return "../img/works/" + id + ".jpg";
+class WorkElementManager {
+    constructor(connectionClient, workElement) {
+        this.connectionClient = connectionClient;
+        this.workElement = workElement;
+        this.tempId = 1;
+
+        this.getTempId = () => {
+            return this.tempId;
+        }
+
+        this.getWork = async(id) => {
+            const workData = await this.connectionClient.getWork(id);
+            this.cacheWork(workData);
+            this.workElement.src = this.getWorkUrlWithId(workData.id);
+            return workData;
+        }
+
+        this.getRandWork = async(befId) => {
+            const workData = await this.connectionClient.getRandWork(befId);
+            this.cacheWork(workData);
+            this.workElement.src = this.getWorkUrlWithId(workData.id);
+            return workData;
+        }
+
+        this.cacheWork = (workData) => {
+            this.tempId = workData.id;
+            const jsonObj = JSON.stringify(workData);
+            sessionStorage.setItem('work', jsonObj);
+        }
+
+        this.getCachedWork = async() => {
+            const workStr = sessionStorage.getItem('work');
+            const workData = JSON.parse(workStr);
+            if(workData) {
+                console.log(`workdata: ${JSON.stringify(workData)}`);
+                workElement.src = this.getWorkUrlWithId(workData.id);
+                return workData;
+            } else {
+                console.log("no cache");
+                const randWorkData = await this.getRandWork(0);
+                return randWorkData;
+            }
+        }
+
+        this.getWorkUrlWithId = (id) => {
+            return "../img/works/" + id + ".jpg";
+        }
+
+        this.getCachedWork().then(() => {
+            console.log("cached work");
+        });
+    }
 }
