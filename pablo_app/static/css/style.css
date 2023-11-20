@@ -6,16 +6,20 @@
 #content-block {
     display: flex;
     margin-top: max(20vh, 120px);
+    justify-content:center;
+    align-items:center;
     user-select: none;
     height: 500px;
-}
+    width: 100vw;
+  　position:relative;
+    /*margin-right: 10px;
+    margin-left: 10px;*/
+  }
 
-#work {
-    -webkit-user-drag: none;
-}
 
 #work-block {
     -webkit-user-drag: none;
+  
     transition: 0.3s;
 }
 
@@ -28,7 +32,10 @@
 #left-button-block {
     display: flex;
     align-items: center;
-    margin-right: max(10vw, 120px);
+    /*margin-right: max(10vw, 120px);
+    margin-left:5vw;*/
+    position: absolute;
+    left: 200px
 }
 
 #left-button-img {
@@ -40,7 +47,10 @@
 #right-button-block {
     display: flex;
     align-items: center;
-    margin-left: max(10vw, 120px);
+    /*margin-left: max(10vw, 120px);
+    margin-right:5vw;*/
+    position: absolute;
+    right: 200px
 }
 
 #right-button-img {
@@ -50,19 +60,26 @@
 }
 
 #work-block{
-  top:0px;
   align-content:center;
+  line-height:70%;
+  vertical-align:middle;
 }
 
 #work{
-  
+  align-items:center;
 }
 
 #title_home{
+  font-size:32px;
   text-align:center;
+  font-weight:bold;
+  font-family: 'Shippori Mincho', serif;
 }
 #creator_home{
+  font-size:24px;
   text-align:center;
+  vertical-align:top;
+  font-family: 'Shippori Mincho', serif;
 }
 
 .zoom-in {
