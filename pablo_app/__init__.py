@@ -34,7 +34,7 @@ def img_icon(filename):
 def img_work(filename):
   return send_from_directory('img/works', filename)
 
-
+#API
 @app.route('/work/<int:id>')
 def work(id=1):
   works = db.session.execute(db.select(Work)).scalars().all()
@@ -71,6 +71,22 @@ def work_random(bef_id):
       "description": work.description
   }
 
+@app.route('/comment/<int:work_id>')
+def comment_by_work(work_id):
+  comments = db.session.execute(db.select(Comment).filter_by(work_id=work_id)).scalars().all()
+  comment_list = []
+  for comment in comments:
+    comment_list.append(
+      {
+        "id": comment.id,
+        "user_id": comment.user_id,
+        "work_id": comment.work_id,
+        "comment": comment.comment
+      }
+    )
+  
+  return comment_list
+
 # class User(db.Model):
 #   id = db.Column(db.Integer, primary_key=True)
 #   user_name = db.Column(db.String, nullable=False)
@@ -81,7 +97,7 @@ class Work(db.Model):
   __tablename__ = "works"
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String, nullable=False)
-  creator_id = db.Column(db.String, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
+  creator_id = db.Column(db.Integer, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
   description = db.Column(db.String, nullable=False)
   creator = db.relationship('Creator')
 
@@ -89,6 +105,21 @@ class Creator(db.Model):
   __tablename__ = "creators"
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String, nullable=False)
+
+class User(db.Model):
+  __tablename__ = "users"
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String, nullable=False)
+
+class Comment(db.Model):
+  __tablename__ = "comments"
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey("users.id", name="fk_user"), nullable=False)
+  work_id = db.Column(db.Integer, db.ForeignKey("works.id", name="fk_work"), nullable=False)
+  comment = db.Column(db.String, nullable=False)
+  user = db.relationship('User')
+  work = db.relationship('Work')
+
 
 
 # @app.route("/user")
