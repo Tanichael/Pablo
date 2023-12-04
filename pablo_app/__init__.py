@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, redirect
 from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 import random
@@ -71,8 +71,8 @@ def work_random(bef_id):
       "description": work.description
   }
 
-@app.route('/comment/<int:work_id>')
-def comment_by_work(work_id):
+@app.route('/comment/get/work=<int:work_id>')
+def comments_by_work(work_id):
   comments = db.session.execute(db.select(Comment).filter_by(work_id=work_id)).scalars().all()
   comment_list = []
   for comment in comments:
@@ -84,14 +84,32 @@ def comment_by_work(work_id):
         "comment": comment.comment
       }
     )
-  
   return comment_list
 
-# class User(db.Model):
-#   id = db.Column(db.Integer, primary_key=True)
-#   user_name = db.Column(db.String, nullable=False)
-#   email = db.Column(db.String, nullable=False)
-#   password = db.Column(db.String, nullable=False)
+@app.route('/comment/get/user=<int:user_id>')
+def comments_by_user(user_id):
+  comments = db.session.execute(db.select(Comment).filter_by(user_id=user_id)).scalars().all()
+  comment_list = []
+  for comment in comments:
+    comment_list.append(
+      {
+        "id": comment.id,
+        "user_id": comment.user_id,
+        "work_id": comment.work_id,
+        "comment": comment.comment
+      }
+    )
+  return comment_list
+
+@app.route('/comment/post', methods=["POST"])
+def add_comment():
+  user_id = request.form.get("user_id")
+  work_id = request.form.get("work_id")
+  comment_content = request.form.get("comment")
+  comment = Comment(user_id=user_id, work_id=work_id, comment=comment_content)
+  db.session.add(comment)
+  db.session.commit()
+  return redirect('/')
 
 class Work(db.Model):
   __tablename__ = "works"
@@ -119,26 +137,3 @@ class Comment(db.Model):
   comment = db.Column(db.String, nullable=False)
   user = db.relationship('User')
   work = db.relationship('Work')
-
-
-
-# @app.route("/user")
-# def create_user():
-#   user = User(user_name="Tom", email="heyhey.com", password="hogehoge")
-#   db.session.add(user)
-#   db.session.commit()
-#   return "<p>Create User</p>"
-
-# @app.route("/works")
-# def get_works():
-#   works = db.session.execute(db.select(Work)).scalars()
-#   res = []
-#   for work in works:
-#     res.append({
-#         "id": work.id,
-#         "title": work.title,
-#         "creator": work.creator,
-#         "description": work.description
-#     })
-#     print(work.creator)
-#   return jsonify(res)
