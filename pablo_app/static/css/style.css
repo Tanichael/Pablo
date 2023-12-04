@@ -11,15 +11,13 @@
     user-select: none;
     height: 500px;
     width: 100vw;
-  　position:relative;
+    position:relative;
     /*margin-right: 10px;
     margin-left: 10px;*/
   }
 
-
 #work-block {
     -webkit-user-drag: none;
-  
     transition: 0.3s;
 }
 
@@ -60,13 +58,16 @@
 }
 
 #work-block{
-  align-content:center;
+  justify-content: center;
+  /* align-content:center; */
   line-height:70%;
   vertical-align:middle;
 }
 
 #work{
   align-items:center;
+  margin: auto;
+  display: block;
 }
 
 #title_home{
@@ -83,11 +84,19 @@
 }
 
 .zoom-in {
-    transition: 0.2 s;
+    transition: 0.25s;
 }
-
 
 .zoom-in:hover {
     cursor: pointer;
     transform: scale(1.2);
+}
+
+.card {
+    transition: transform 0.5s;
+    backface-visibility : hidden;
+}
+
+.rotate {
+    transform: rotateY(180deg);
 }

@@ -122,6 +122,7 @@ class DescriptionElementManager {
         console.log("description manager");
         this.descriptionElement = document.createElement('div');
         this.descriptionElement.id = 'text';
+        this.descriptionElement.classList.add('card');
         const title = document.createElement('p');
         title.id = 'title';
         title.textContent = '『モナ・リザ』';
@@ -150,18 +151,18 @@ class DescriptionElementManager {
         this.descriptionElement.appendChild(description);
 
         this.hide = () => {
-            this.descriptionElement.style.display = 'none';
+            // this.descriptionElement.style.display = 'none';
+            this.descriptionElement.classList.add('rotate');
         }
 
         this.show = () => {
-            
-            this.descriptionElement.style.display = 'block';
+            // this.descriptionElement.style.display = 'block';
+            this.descriptionElement.classList.remove('rotate');
         }
 
         this.setWork = (workData) => {
-            console.log("work data");
             this.title.textContent = workData.title;
-            this.creator.textContent = workData.creator;
+            this.creator.textContent = workData.creator.name;
             this.description.textContent = workData.description;
         }
     }
@@ -174,11 +175,13 @@ class WorkElementManager {
         // this.tempId = 1;
 
         this.hide = () => {
-            this.workElement.style.display = 'none';
+            // this.workElement.style.display = 'none';
+            this.workElement.classList.add('rotate');
         }
 
         this.show = () => {
-            this.workElement.style.display = 'block';
+            // this.workElement.style.display = 'block';
+            this.workElement.classList.remove('rotate');
         }
     }
 }
