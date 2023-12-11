@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const connectionClient = new ConnectionClient();
-
     const leftButton = document.getElementById('left-button-img');
     const rightButton = document.getElementById('right-button-img');
     const workElement = document.getElementById('work');
     const workBlock = document.getElementById('work-block');
-  
-    const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton);
+    const subDescription = document.getElementsByClassName('test');
+
+    const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton, subDescription);
 });
 
 class ConnectionClient {
@@ -36,12 +36,14 @@ class ConnectionClient {
 }
 
 class WorkBlockManager {
-    constructor(connectionClient, workBlock, workElement, leftButton, rightButton) {
+    constructor(connectionClient, workBlock, workElement, leftButton, rightButton, subDescription) {
         this.connectionClient = connectionClient;
         this.workElementManager = new WorkElementManager(connectionClient, workElement);
         this.descriptionElementManager = new DescriptionElementManager(connectionClient);
         this.tempId = 1;
+        this.subDescription = subDescription;
 
+      //多分あとはここをいじればうまく行くと思う
         workBlock.appendChild(this.descriptionElementManager.descriptionElement);
 
         this.workElementManager.show();
@@ -59,9 +61,18 @@ class WorkBlockManager {
             const workData = await this.getWork(this.getTempId()+1);
         });
 
+      //.hideを実行した後に要素の追加削除を行えばいいのではといじってみたのですがなんかうまくいきませんでした
         this.workElementManager.workElement.addEventListener('click', () => {
             this.workElementManager.hide();
             this.descriptionElementManager.show();
+          
+            setTimeout(() => {
+            workBlock.insertBefore(this.descriptionElementManager.descriptionElement, workBlock.firstChild);
+            workBlock.removeChild(this.workElementManager.workElement);
+            workBlock.removeChild(this.WorkBlockManager.subDescription);
+            //何で消えないんだろう,,,
+            },500);
+            
         });
 
         this.descriptionElementManager.descriptionElement.addEventListener('click', () => {
@@ -123,9 +134,11 @@ class DescriptionElementManager {
         this.descriptionElement = document.createElement('div');
         this.descriptionElement.id = 'text';
         this.descriptionElement.classList.add('card');
+        
+        //title要素の作成
         const title = document.createElement('p');
         title.id = 'title';
-        title.textContent = '『モナ・リザ』';
+        title.textContent = '『モナリザ』';
         this.title = title;
 
         // creator要素の作成
@@ -174,14 +187,13 @@ class WorkElementManager {
         this.workElement = workElement;
         // this.tempId = 1;
 
-        this.hide = () => {
-            // this.workElement.style.display = 'none';
-            this.workElement.classList.add('rotate');
-        }
-
         this.show = () => {
-            // this.workElement.style.display = 'block';
-            this.workElement.classList.remove('rotate');
-        }
+        // this.workElement.style.display = 'block';
+          this.workElement.classList.remove('rotate');
+        };
+
+        this.hide = () => {
+          this.workElement.classList.add('rotate');
+        };
     }
 }

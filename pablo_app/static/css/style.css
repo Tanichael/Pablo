@@ -70,6 +70,7 @@
   display: block;
 }
 
+
 #title_home{
   font-size:32px;
   text-align:center;
@@ -99,4 +100,39 @@
 
 .rotate {
     transform: rotateY(180deg);
+    transition: transform 0.5s ease-out;
+}
+#text { 
+    font-family: 'Shippori Mincho', serif;
+    letter-spacing:normal;
+    line-height: 100%;
+    /*width: 1000px;*/
+    width:50vw;
+    border-top: 5px gray inset;
+    border-right: 5px gray double;
+    border-bottom: 5px gray double;
+    border-left: 5px gray inset; 
+}
+
+#title{
+  font-size: 54px;
+  font-weight: bold;
+  text-align:center;
+}
+
+
+#creator{
+  font-size: 28px;
+  text-align:center;
+}
+
+
+
+#description{
+  font-size: 24px;
+  font-weight: normal;
+  margin-right:10%;
+  margin-left:10%;
+  text-align:center;
+  line-height:200%;/*textと行間の指示が被ってるので後で直す？*/
 }
