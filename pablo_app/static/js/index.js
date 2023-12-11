@@ -2,11 +2,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const connectionClient = new ConnectionClient();
     const leftButton = document.getElementById('left-button-img');
     const rightButton = document.getElementById('right-button-img');
-    const workElement = document.getElementById('work');
+    const workElement = document.getElementById('work-and-title-block');
     const workBlock = document.getElementById('work-block');
     const subDescription = document.getElementsByClassName('test');
+    const work = document.getElementById('work');
 
     const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton, subDescription);
+
+    workBlockManager.getCachedWork().then(() => {
+        console.log("cached work");
+    });
 });
 
 class ConnectionClient {
@@ -65,13 +70,13 @@ class WorkBlockManager {
         this.workElementManager.workElement.addEventListener('click', () => {
             this.workElementManager.hide();
             this.descriptionElementManager.show();
-          
-            setTimeout(() => {
-            workBlock.insertBefore(this.descriptionElementManager.descriptionElement, workBlock.firstChild);
-            workBlock.removeChild(this.workElementManager.workElement);
-            workBlock.removeChild(this.WorkBlockManager.subDescription);
-            //何で消えないんだろう,,,
-            },500);
+
+            // setTimeout(() => {
+            // workBlock.insertBefore(this.descriptionElementManager.descriptionElement, workBlock.firstChild);
+            // workBlock.removeChild(this.workElementManager.workElement);
+            // // workBlock.removeChild(this.subDescription);
+            // //何で消えないんだろう,,,]
+            // },500);
             
         });
 
@@ -97,7 +102,7 @@ class WorkBlockManager {
         }
 
         this.cacheWork = (workData) => {
-            this.workElementManager.workElement.src = this.getWorkUrlWithId(workData.id);
+            this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
             this.descriptionElementManager.setWork(workData);
             this.tempId = workData.id;
             const jsonObj = JSON.stringify(workData);
@@ -109,7 +114,7 @@ class WorkBlockManager {
             const workData = JSON.parse(workStr);
             if(workData) {
                 console.log(`workdata: ${JSON.stringify(workData)}`);
-                workElement.src = this.getWorkUrlWithId(workData.id);
+                this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
                 return workData;
             } else {
                 console.log("no cache");
@@ -121,10 +126,6 @@ class WorkBlockManager {
         this.getWorkUrlWithId = (id) => {
             return "../img/works/" + id + ".jpg";
         }
-
-        this.getCachedWork().then(() => {
-            console.log("cached work");
-        });
     }
 }
 
@@ -185,6 +186,8 @@ class WorkElementManager {
     constructor(connectionClient, workElement) {
         this.connectionClient = connectionClient;
         this.workElement = workElement;
+        this.work = document.getElementById('work');
+        console.log(`${this.work.src.toString()}`)
         // this.tempId = 1;
 
         this.show = () => {
