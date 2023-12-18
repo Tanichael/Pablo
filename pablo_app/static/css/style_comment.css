@@ -1,0 +1,29 @@
+#comment-user{
+  display:flex;
+}
+
+ul{
+ list-style:none; 
+}
+
+li{
+  position:relative;
+  border-top: 5px gray double;
+  border-right: 5px gray double;
+  border-bottom: 5px gray double;
+  border-left: 5px gray double; 
+  margin-top: 20px;
+  margin-right:20vw;
+  margin-left: 20vw;
+  /* width: 60vw; */
+}
+
+#comment-name{
+  text:bold;
+  margin-right: 0px;
+}
+
+#work{
+  margin-right:auto;
+  margin-left:auto;
+}
