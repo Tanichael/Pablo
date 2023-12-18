@@ -172,9 +172,8 @@ class WorkBlockManager {
             this.workElementManager.setWork(workData);
             this.tempId = workData.id;
             const jsonObj = JSON.stringify(workData);
-            console.log("cache");
+
             sessionStorage.setItem('work', jsonObj);
-            console.log("end cache");
         }
 
         this.getCachedWork = async() => {
@@ -254,9 +253,12 @@ class WorkElementManager {
         console.log(`${this.work.src.toString()}`)
         // this.tempId = 1;
 
+        const workStr = sessionStorage.getItem('work');
+        const workData = JSON.parse(workStr);
+
         const title = document.createElement('p');
         title.id = 'title_home';
-        title.textContent = '『モナリザ』';
+        title.textContent = 'workData.title';
         this.title = title;
         const creator = document.createElement('p');
         creator.id = 'creator_home';
@@ -291,3 +293,9 @@ class WorkElementManager {
         }
     }
 }
+
+// class DataStorage {
+//   constructor() {
+//     this.workData = {};
+//   }
+// }

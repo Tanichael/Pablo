@@ -18,6 +18,10 @@ def index():
 def description():
   return render_template('description.html')
 
+@app.route('/comment')
+def comment():
+  return render_template('comment.html')
+
 
 @app.route('/users')
 def users():
