@@ -12,7 +12,54 @@ document.addEventListener("DOMContentLoaded", async () => {
     workBlockManager.getCachedWork().then(() => {
         console.log("cached work");
     });
+
+    const commentUlBlock = document.getElementById('comment-block-list');
+    const commentUlBlockHolder = new CommentUlBlockHolder(commentUlBlock);
+
+    connectionClient.getCommentByWorkId(1).then((comments) => {
+        console.log(`comments ${JSON.stringify(comments)}`)
+        commentUlBlockHolder.setComments(comments);
+    });
 });
+
+class CommentUlBlockHolder {
+    constructor(ulBlock) {
+        this.ulBlock = ulBlock;
+
+        this.setComments = (comments) => {
+            while(this.ulBlock.firstChild) {
+                this.ulBlock.removeChild(this.ulBlock.firstChild);
+            }
+
+            comments.forEach((comment) => {
+                const li = document.createElement('li');
+                li.className = 'comment';
+                const commentUserDiv = document.createElement('div');
+                commentUserDiv.className = "comment-user";
+                const commentUserHolder = new CommentUserHolder(commentUserDiv, comment);
+                li.appendChild(commentUserDiv);
+                this.ulBlock.appendChild(li);
+            });
+        }
+    }
+}
+
+class CommentUserHolder {
+    constructor(commentBlock, comment) {
+        this.commentBlock = commentBlock;
+
+        this.commentNameDiv = document.createElement('div');
+        this.commentNameDiv.className = 'comment-name';
+        this.commentNameDiv.textContent = comment.user_id;
+      
+        this.commentElementDiv = document.createElement('div');
+        this.commentElementDiv.className = 'comment-element';
+        this.commentElementDiv.textContent = comment.comment; 
+        
+        this.commentBlock.appendChild(this.commentNameDiv);
+        this.commentBlock.appendChild(this.commentElementDiv);
+    }
+}
 
 class ConnectionClient {
     constructor() {
@@ -121,12 +168,13 @@ class WorkBlockManager {
         }
 
         this.cacheWork = (workData) => {
-            this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
             this.descriptionElementManager.setWork(workData);
             this.workElementManager.setWork(workData);
             this.tempId = workData.id;
             const jsonObj = JSON.stringify(workData);
+            console.log("cache");
             sessionStorage.setItem('work', jsonObj);
+            console.log("end cache");
         }
 
         this.getCachedWork = async() => {
@@ -134,17 +182,13 @@ class WorkBlockManager {
             const workData = JSON.parse(workStr);
             if(workData) {
                 console.log(`workdata: ${JSON.stringify(workData)}`);
-                this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
+                this.workElementManager.setWork(workData);
                 return workData;
             } else {
                 console.log("no cache");
                 const randWorkData = await this.getRandWork(0);
                 return randWorkData;
             }
-        }
-
-        this.getWorkUrlWithId = (id) => {
-            return "../img/works/" + id + ".jpg";
         }
     }
 }
@@ -234,12 +278,16 @@ class WorkElementManager {
 
         this.hide = () => {
           this.workElement.classList.add('rotate');
+        };
 
         this.setWork = (workData) => {
+            this.work.src = this.getWorkUrlWithId(workData.id);
             this.title.textContent = workData.title;
             this.creator.textContent = workData.creator.name;
-          }
-          
-        };
+        }
+
+        this.getWorkUrlWithId = (id) => {
+            return "../img/works/" + id + ".jpg";
+        }
     }
 }
