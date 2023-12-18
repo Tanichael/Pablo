@@ -91,12 +91,14 @@
   text-align:center;
   font-weight:bold;
   font-family: 'Shippori Mincho', serif;
+  line-height: 100%;
 }
 #creator_home{
   font-size:24px;
   text-align:center;
   vertical-align:top;
   font-family: 'Shippori Mincho', serif;
+  line-height: 100%;
 }
 
 .zoom-in {
@@ -120,7 +122,7 @@
 #text { 
     font-family: 'Shippori Mincho', serif;
     letter-spacing:normal;
-    line-height: 100%;
+    /* line-height: 100%; */
     /* width: 1000px; */
     width:100%;
     /* height: 60%; */
@@ -134,20 +136,23 @@
   font-size: 54px;
   font-weight: bold;
   text-align:center;
+  line-height:100%;
 }
 
 
 #creator{
   font-size: 28px;
   text-align:center;
+  line-height:100%;
 }
 
 
 #description{
-  font-size: 24px;
+  font-size: 20px;
   font-weight: normal;
   margin-right:10%;
   margin-left:10%;
   text-align:center;
-  line-height:200%;/*textと行間の指示が被ってるので後で直す？*/
+  line-height:120%;/*textと行間の指示が被ってるので後で直す？*/
 }
+/* あとでcssフレームワーク探しましょう */
