@@ -121,12 +121,13 @@ class WorkBlockManager {
         }
 
         this.cacheWork = (workData) => {
-            this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
             this.descriptionElementManager.setWork(workData);
             this.workElementManager.setWork(workData);
             this.tempId = workData.id;
             const jsonObj = JSON.stringify(workData);
+            console.log("cache");
             sessionStorage.setItem('work', jsonObj);
+            console.log("end cache");
         }
 
         this.getCachedWork = async() => {
@@ -134,17 +135,13 @@ class WorkBlockManager {
             const workData = JSON.parse(workStr);
             if(workData) {
                 console.log(`workdata: ${JSON.stringify(workData)}`);
-                this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
+                this.workElementManager.setWork(workData);
                 return workData;
             } else {
                 console.log("no cache");
                 const randWorkData = await this.getRandWork(0);
                 return randWorkData;
             }
-        }
-
-        this.getWorkUrlWithId = (id) => {
-            return "../img/works/" + id + ".jpg";
         }
     }
 }
@@ -234,12 +231,16 @@ class WorkElementManager {
 
         this.hide = () => {
           this.workElement.classList.add('rotate');
+        };
 
         this.setWork = (workData) => {
+            this.work.src = this.getWorkUrlWithId(workData.id);
             this.title.textContent = workData.title;
             this.creator.textContent = workData.creator.name;
-          }
-          
-        };
+        }
+
+        this.getWorkUrlWithId = (id) => {
+            return "../img/works/" + id + ".jpg";
+        }
     }
 }
