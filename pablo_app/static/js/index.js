@@ -37,6 +37,26 @@ class ConnectionClient {
             console.log(`workData: ${JSON.stringify(workData)}`);
             return workData;
         }
+
+        this.getCommentByUserId = async (userId) => {
+            const commentUrl = '/comment/get/user=' + userId.toString();
+            const commentResponse = await fetch(commentUrl);
+            if(!commentResponse.ok) {
+                throw new Error('error');
+            }
+            const commentData = await commentResponse.json();
+            return commentData;
+        }
+
+        this.getCommentByWorkId = async (workId) => {
+            const commentUrl = '/comment/get/work=' + workId.toString();
+            const commentResponse = await fetch(commentUrl);
+            if(!commentResponse.ok) {
+                throw new Error('error');
+            }
+            const commentData = await commentResponse.json();
+            return commentData;
+        }
     }
 }
 
