@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const rightButton = document.getElementById('right-button-img');
     const workElement = document.getElementById('work-and-title-block');
     const workBlock = document.getElementById('work-block');
-    const subDescription = document.getElementsByClassName('test');
+    // const subDescription = document.getElementsByClassName('test');
     const work = document.getElementById('work');
 
-    const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton, subDescription);
+    const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton);
 
     workBlockManager.getCachedWork().then(() => {
         console.log("cached work");
@@ -41,14 +41,13 @@ class ConnectionClient {
 }
 
 class WorkBlockManager {
-    constructor(connectionClient, workBlock, workElement, leftButton, rightButton, subDescription) {
+    constructor(connectionClient, workBlock, workElement, leftButton, rightButton) {
         this.connectionClient = connectionClient;
         this.workElementManager = new WorkElementManager(connectionClient, workElement);
         this.descriptionElementManager = new DescriptionElementManager(connectionClient);
         this.tempId = 1;
-        this.subDescription = subDescription;
-
-      //多分あとはここをいじればうまく行くと思う
+        // this.subDescription = subDescription;
+      
         workBlock.appendChild(this.descriptionElementManager.descriptionElement);
 
         this.workElementManager.show();
@@ -104,6 +103,7 @@ class WorkBlockManager {
         this.cacheWork = (workData) => {
             this.workElementManager.work.src = this.getWorkUrlWithId(workData.id);
             this.descriptionElementManager.setWork(workData);
+            this.workElementManager.setWork(workData);
             this.tempId = workData.id;
             const jsonObj = JSON.stringify(workData);
             sessionStorage.setItem('work', jsonObj);
@@ -190,6 +190,23 @@ class WorkElementManager {
         console.log(`${this.work.src.toString()}`)
         // this.tempId = 1;
 
+        const title = document.createElement('p');
+        title.id = 'title_home';
+        title.textContent = '『モナリザ』';
+        this.title = title;
+        const creator = document.createElement('p');
+        creator.id = 'creator_home';
+        const creatorBold = document.createElement('b');
+        creatorBold.textContent = 'レオナルド・ダ・ヴィンチ';
+        const creatorItalic = document.createElement('i');
+        creatorItalic.textContent = '/Leonardo da Vinci';
+        creator.appendChild(creatorBold);
+        creator.appendChild(creatorItalic);
+        this.creator = creator;
+
+        this.workElement.appendChild(title);
+        this.workElement.appendChild(creator);
+      
         this.show = () => {
         // this.workElement.style.display = 'block';
           this.workElement.classList.remove('rotate');
@@ -197,6 +214,12 @@ class WorkElementManager {
 
         this.hide = () => {
           this.workElement.classList.add('rotate');
+
+        this.setWork = (workData) => {
+            this.title.textContent = workData.title;
+            this.creator.textContent = workData.creator.name;
+          }
+          
         };
     }
 }
