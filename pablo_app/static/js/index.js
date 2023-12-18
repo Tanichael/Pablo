@@ -12,7 +12,54 @@ document.addEventListener("DOMContentLoaded", async () => {
     workBlockManager.getCachedWork().then(() => {
         console.log("cached work");
     });
+
+    const commentUlBlock = document.getElementById('comment-block-list');
+    const commentUlBlockHolder = new CommentUlBlockHolder(commentUlBlock);
+
+    connectionClient.getCommentByWorkId(1).then((comments) => {
+        console.log(`comments ${JSON.stringify(comments)}`)
+        commentUlBlockHolder.setComments(comments);
+    });
 });
+
+class CommentUlBlockHolder {
+    constructor(ulBlock) {
+        this.ulBlock = ulBlock;
+
+        this.setComments = (comments) => {
+            while(this.ulBlock.firstChild) {
+                this.ulBlock.removeChild(this.ulBlock.firstChild);
+            }
+
+            comments.forEach((comment) => {
+                const li = document.createElement('li');
+                li.className = 'comment';
+                const commentUserDiv = document.createElement('div');
+                commentUserDiv.className = "comment-user";
+                const commentUserHolder = new CommentUserHolder(commentUserDiv, comment);
+                li.appendChild(commentUserDiv);
+                this.ulBlock.appendChild(li);
+            });
+        }
+    }
+}
+
+class CommentUserHolder {
+    constructor(commentBlock, comment) {
+        this.commentBlock = commentBlock;
+
+        this.commentNameDiv = document.createElement('div');
+        this.commentNameDiv.className = 'comment-name';
+        this.commentNameDiv.textContent = comment.user_id;
+      
+        this.commentElementDiv = document.createElement('div');
+        this.commentElementDiv.className = 'comment-element';
+        this.commentElementDiv.textContent = comment.comment; 
+        
+        this.commentBlock.appendChild(this.commentNameDiv);
+        this.commentBlock.appendChild(this.commentElementDiv);
+    }
+}
 
 class ConnectionClient {
     constructor() {

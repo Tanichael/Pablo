@@ -156,3 +156,23 @@
   line-height:120%;/*textと行間の指示が被ってるので後で直す？*/
 }
 /* あとでcssフレームワーク探しましょう */
+
+#comment-user{
+    display:flex;
+}
+
+ul{
+    list-style:none; 
+}
+
+li{
+    border-top: 5px gray double;
+    border-right: 5px gray double;
+    border-bottom: 5px gray double;
+    border-left: 5px gray double; 
+    margin-top: 20px;
+}
+
+#comment-name{
+    margin-right: 20px;
+}
