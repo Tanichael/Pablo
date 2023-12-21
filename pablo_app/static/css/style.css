@@ -239,3 +239,7 @@ textarea{
 #comment-block-list::-webkit-scrollbar-thumb:hover {
     background: #8b8b8b; /* ホバー時のハンドルの背景色 */
 }
+
+#comment_form_block {
+    width: 500px;
+}
