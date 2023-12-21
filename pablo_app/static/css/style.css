@@ -12,6 +12,7 @@
     height: 600px;
     width: 100vw;
     position:relative;
+
     /*margin-right: 10px;
     margin-left: 10px;*/
 }
@@ -67,7 +68,9 @@
     width: 500px;
     height: 600px;
     line-height:70%;
-    vertical-align:middle;
+    vertical-align:center;
+    margin-right:auto; 
+    margin-left:auto;
 }
 
 #work-block div {
@@ -175,4 +178,24 @@ li{
 
 #comment-name{
     margin-right: 20px;
+}
+
+form{
+  display: flex;
+}
+
+textarea{
+    border: 4px solid;
+    width: 90%;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    resize: none;
+    padding: 3px 3px;
+    font-family: 'Shippori Mincho', serif;
+    font-size:15px;
+}
+#form_image{
+    width:10%;
+    cursor:pointer;
+    
 }
