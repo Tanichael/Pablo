@@ -85,7 +85,8 @@ def comments_by_work(work_id):
         "id": comment.id,
         "user_id": comment.user_id,
         "work_id": comment.work_id,
-        "comment": comment.comment
+        "comment": comment.comment,
+        "user_name": comment.user.name,
       }
     )
   return comment_list
@@ -100,7 +101,8 @@ def comments_by_user(user_id):
         "id": comment.id,
         "user_id": comment.user_id,
         "work_id": comment.work_id,
-        "comment": comment.comment
+        "comment": comment.comment,
+        "user_name": comment.user.name
       }
     )
   return comment_list
