@@ -9,7 +9,7 @@
     justify-content:center;
     align-items:center;
     user-select: none;
-    height: 600px;
+    /* height: 600px; */
     width: 100vw;
     position:relative;
     /*margin-right: 10px;
@@ -80,10 +80,15 @@
     backface-visibility: hidden;
 }
 
+#work-and-title-block {
+    height: 100%;
+}
+
 #work{
   align-items:center;
   margin: auto;
   display: block;
+  height: 75%;
 }
 
 #title_home{
@@ -124,7 +129,7 @@
     letter-spacing:normal;
     /* line-height: 100%; */
     /* width: 1000px; */
-    width:100%;
+    width:85%;
     /* height: 60%; */
     border-top: 5px gray inset;
     border-right: 5px gray double;
@@ -157,22 +162,57 @@
 }
 /* あとでcssフレームワーク探しましょう */
 
-#comment-user{
+/* .comment-user{ 
     display:flex;
-}
+} */
 
 ul{
     list-style:none; 
 }
 
 li{
-    border-top: 5px gray double;
+    /* border-top: 5px gray double;
     border-right: 5px gray double;
     border-bottom: 5px gray double;
-    border-left: 5px gray double; 
-    margin-top: 20px;
+    border-left: 5px gray double;  */
+    margin: 10px 0px;
 }
 
-#comment-name{
+.comment-name{
+    width: 40%;
     margin-right: 20px;
+}
+
+#comment-block {
+    width: 85%;
+    margin: auto;
+}
+
+#comment-block-list { 
+    height: 150px;
+    /* max-height: 200px; */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+}
+
+/* スクロールバー全体のスタイルを設定 */
+#comment-block-list::-webkit-scrollbar {
+    width: 5px; /* スクロールバーの幅 */
+}
+  
+  /* スクロールバーのトラック（背景部分）のスタイルを設定 */
+#comment-block-list::-webkit-scrollbar-track {
+    background: #f1f1f1; /* トラックの背景色 */
+}
+  
+  /* スクロールバーのハンドル（動かす部分）のスタイルを設定 */
+#comment-block-list::-webkit-scrollbar-thumb {
+    background: #b8b8b8; /* ハンドルの背景色 */
+    border-radius: 10px;
+}
+  
+  /* ハンドルをホバーしたときのスタイル */
+#comment-block-list::-webkit-scrollbar-thumb:hover {
+    background: #8b8b8b; /* ホバー時のハンドルの背景色 */
 }
