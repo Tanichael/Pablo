@@ -1,8 +1,38 @@
-/*#greeting {
-    color: blue;
+body{
+  display: flex;
 }
-*/
+/* ここからnavigation */
+#navigation-block{
+  width:180px;
+  /* background: skyblue; */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 中央寄せ */
+  border-right: 1px solid #ccc;
+  padding-right: 60px;
+  padding-left: 30px;
+}
+#icon-img{
+ margin-top:40px;
+}
+#menu-list{
+  list-style-type:none;
+  padding-left: 0px;
+}
+#menu-list li a{
+  text-decoration: none;
+}
+.menu{
+  font-size: 20px;
+  padding-left: 10px;
+  border-left: 5px solid #5f9ea0;
+  border-bottom: 2px double #5f9ea0;
+  margin-top:20px;
+}
 
+
+
+/* ここからmain */
 #content-block {
     display: flex;
     margin-top: max(15vh, 100px);
@@ -16,51 +46,41 @@
     /*margin-right: 10px;
     margin-left: 10px;*/
 }
-
-#work-block {
-    -webkit-user-drag: none;
-    position: relative;
-    transform-style: preserve-3d;
-    transition: all 0.3s ease-in-out;
-}
-
-#work-block:hover {
-    cursor: pointer;
-    opacity: 0.5;
-    transform: scale(1.05);
-}
-
 #left-button-block {
     display: flex;
     align-items: center;
     /*margin-right: max(10vw, 120px);
     margin-left:5vw;*/
     position: absolute;
-    left: 200px
+    left: 0px
 }
-
 #left-button-img {
     margin: auto;
     user-select: none;
     display: block;
 }
-
 #right-button-block {
     display: flex;
     align-items: center;
     /*margin-left: max(10vw, 120px);
     margin-right:5vw;*/
     position: absolute;
-    right: 200px
+    right: 0px
 }
-
 #right-button-img {
     margin: auto;
     user-select: none;
     display: block;
 }
 
+
+
+/* ここからwork */
 #work-block{
+    -webkit-user-drag: none;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -72,7 +92,11 @@
     margin-right:auto; 
     margin-left:auto;
 }
-
+/* #work-block:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transform: scale(1.05);
+} */
 #work-block div {
     margin: auto;
     position: absolute;
@@ -82,18 +106,36 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
+.card {
+    transition: transform 0.5s;
+    backface-visibility : hidden;
+}
+.rotate {
+    transform: rotateY(180deg);
+    transition: transform 0.5s ease-out;
+}
+.hovered{
+  cursor: pointer;
+  opacity: 0.5;
+  transform: scale(1.05);
+}
 
+
+/* ここから作品表面（絵画） */
 #work-and-title-block {
     height: 100%;
 }
-
+/* #work-and-title-block:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transform: scale(1.05);
+} */
 #work{
   align-items:center;
   margin: auto;
   display: block;
   height: 75%;
 }
-
 #title_home{
   font-size:32px;
   text-align:center;
@@ -109,24 +151,9 @@
   line-height: 100%;
 }
 
-.zoom-in {
-    transition: 0.25s;
-}
 
-.zoom-in:hover {
-    cursor: pointer;
-    transform: scale(1.2);
-}
 
-.card {
-    transition: transform 0.5s;
-    backface-visibility : hidden;
-}
-
-.rotate {
-    transform: rotateY(180deg);
-    transition: transform 0.5s ease-out;
-}
+/* ここから作品裏面（説明） */
 #text { 
     font-family: 'Shippori Mincho', serif;
     letter-spacing:normal;
@@ -139,57 +166,91 @@
     border-bottom: 5px gray double;
     border-left: 5px gray inset; 
 }
-
 #title{
   font-size: 54px;
   font-weight: bold;
   text-align:center;
   line-height:100%;
 }
-
-
 #creator{
   font-size: 28px;
   text-align:center;
   line-height:100%;
 }
-
-
 #description{
   font-size: 20px;
   font-weight: normal;
   margin-right:10%;
   margin-left:10%;
   text-align:center;
-  line-height:120%;/*textと行間の指示が被ってるので後で直す？*/
-}
-/* あとでcssフレームワーク探しましょう */
-
-/* .comment-user{ 
-    display:flex;
-} */
-
-ul{
-    list-style:none; 
+  line-height:120%;
+  /*textと行間の指示が被ってるので後で直す？*/
 }
 
-li{
+
+
+/* ここからコメント */
+#comment-block {
+    width: 100%
+    margin: auto;
+}
+#comment-block-list { 
+    height: 150px;
+    /* max-height: 200px; */
+    overflow-y: auto;
+    border-top: 3px double #ccc;
+    border-bottom: 3px double #ccc;
+    background:#f1f8ff;
+    /* box-shadow :0px 0px 5px silver; */
+    padding: 10px 20px;
+    list-style-type:none;
+}
+#comment-block-list::-webkit-scrollbar {
+  /* スクロールバー全体のスタイルを設定 */
+    width: 1px; /* スクロールバーの幅 細い方がオシャレだけど操作性が、、、*/
+} 
+#comment-block-list::-webkit-scrollbar-track {
+  /* スクロールバーのトラック（背景部分）のスタイルを設定 */
+    background: #f1f1f1; /* トラックの背景色 */
+}
+#comment-block-list::-webkit-scrollbar-thumb {
+  /* スクロールバーのハンドル（動かす部分）のスタイルを設定 */
+    background: #b8b8b8; /* ハンドルの背景色 */
+    border-radius: 0px;
+}
+#comment-block-list::-webkit-scrollbar-thumb:hover {
+  /* ハンドルをホバーしたときのスタイル */
+    background: #8b8b8b; /* ホバー時のハンドルの背景色 */
+}
+.comment{
     /* border-top: 5px gray double;
     border-right: 5px gray double;
-    border-bottom: 5px gray double;
-    border-left: 5px gray double;  */
-    margin: 10px 0px;
+    border-bottom: 5px gray double; */
+    border-left: 5px #2d8fdd solid; 
+    margin-top: 20px;
 }
-
+.comment-user{
+  margin-left: 20px;
+  /* display:flex; */
+}
 .comment-name{
-    width: 40%;
-    margin-right: 20px;
+    /* width: 40%; */
+    margin-left: 20px;
 }
-
+.comment-element{
+    /* width: 40%; */
+    margin-left: 20px;
+}
 form{
   display: flex;
+  width:500px;
+  margin:auto;
 }
+#form_image{
+    width:10%;
+    cursor:pointer;
 
+}
 textarea{
     border: 4px solid;
     width: 90%;
@@ -198,48 +259,16 @@ textarea{
     resize: none;
     padding: 3px 3px;
     font-family: 'Shippori Mincho', serif;
-    font-size:15px;
-}
-#form_image{
-    width:10%;
-    cursor:pointer;
-    
+    font-size:16px;
 }
 
-#comment-block {
-    width: 85%;
-    margin: auto;
+
+
+.zoom-in {
+    transition: 0.25s;
 }
 
-#comment-block-list { 
-    height: 150px;
-    /* max-height: 200px; */
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-}
-
-/* スクロールバー全体のスタイルを設定 */
-#comment-block-list::-webkit-scrollbar {
-    width: 5px; /* スクロールバーの幅 */
-}
-  
-  /* スクロールバーのトラック（背景部分）のスタイルを設定 */
-#comment-block-list::-webkit-scrollbar-track {
-    background: #f1f1f1; /* トラックの背景色 */
-}
-  
-  /* スクロールバーのハンドル（動かす部分）のスタイルを設定 */
-#comment-block-list::-webkit-scrollbar-thumb {
-    background: #b8b8b8; /* ハンドルの背景色 */
-    border-radius: 10px;
-}
-  
-  /* ハンドルをホバーしたときのスタイル */
-#comment-block-list::-webkit-scrollbar-thumb:hover {
-    background: #8b8b8b; /* ホバー時のハンドルの背景色 */
-}
-
-#comment_form_block {
-    width: 500px;
+.zoom-in:hover {
+    cursor: pointer;
+    transform: scale(1.2);
 }

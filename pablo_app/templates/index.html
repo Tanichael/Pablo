@@ -7,40 +7,57 @@
   <body>
     <!-- <h1 id="greeting">Hello, World!</h1> -->
     
+    <div id = "navigation-block">
+    <nav>
+       <img id="icon-img" src="../img/icons/painting.png" draggable="false" alt="pablo-icon" width="128"> 
+      <!-- アイコン画像は仮です -->
+      
+      <ul id ="menu-list">
+        <li class = "menu">
+          <a href ="/">home</a>
+        </li>
+        <li class = "menu">
+          <a href ="/description">description</a>
+        </li>
+        <li class = "menu">
+          <a href = "/comment">comment</a>
+        </li>
+        <li class = "menu">
+          <a href = "/users">users</a>
+        </li>
+          
+      </ul>
+    </nav>
+    </div>
+    <!-- 気が向いたらハンバーガメニューにしましょうか、、、 -->
+    
     <div id="content-block">
-      <div id="left-button-block">
-        <img id="left-button-img" class="zoom-in" src="../img/icons/arrow_left.png" draggable="false" alt="left" width="60" height="75">
-      </div>
-
       <div id="work-and-comment-block">
         <div id="work-block">
+          <div id="left-button-block">
+            <img id="left-button-img" class="zoom-in" src="../img/icons/arrow_left.png" draggable="false" alt="left" width="60" height="75">
+          </div>
           <div id="work-and-title-block" class='card'>
             <img id="work" src="" alt="img">
             <!-- <img id="work" src="" alt="モナリザ"> -->
             <!-- <p id ="title_home" class = "test"> モナ・リザhtml</p>
             <p id ="creator_home" class = "test">レオナルド・ダ・ヴィンチhtml</p> -->
           </div>
+          <div id="right-button-block">
+            <img id="right-button-img" class="zoom-in" src="../img/icons/arrow_right.png" draggable="false" alt="right" width="60" height="75">
+          </div>
         </div>
         <div id="comment-block">
           <ul id = 'comment-block-list'>
 
           </ul>
-        </div>
-        <div id=comment_form_block>
-          <div id="form-block">
-            <form>
+        <form>
                <input type="image" id="form_image" src="../img/icons/istockphoto-1017196448-612x612.jpg" alt="送信する" >
                <textarea id="textarea1">
-            
                </textarea>
-            </form>
-          </div>
+        </form>
         </div>
       </div>
-      <div id="right-button-block">
-        <img id="right-button-img" class="zoom-in" src="../img/icons/arrow_right.png" draggable="false" alt="right" width="60" height="75">
-      </div>
-      
     </div>
 
     <script src="static/js/index.js"></script>
