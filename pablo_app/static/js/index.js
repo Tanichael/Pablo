@@ -143,7 +143,7 @@ class WorkBlockManager {
         this.workElementManager.workElement.addEventListener('click', () => {
             this.workElementManager.hide();
             this.descriptionElementManager.show();
-
+            this.workElementManager.dishovered();
             // setTimeout(() => {
             // workBlock.insertBefore(this.descriptionElementManager.descriptionElement, workBlock.firstChild);
             // workBlock.removeChild(this.workElementManager.workElement);
@@ -153,10 +153,19 @@ class WorkBlockManager {
             
         });
 
+        this.workElementManager.workElement.addEventListener('mouseover', () =>{
+            this.workElementManager.hovered();
+        }) 
+        this.workElementManager.workElement.addEventListener('mouseout', () =>{
+            this.workElementManager.dishovered();
+        }) 
+
         this.descriptionElementManager.descriptionElement.addEventListener('click', () => {
             this.workElementManager.show();
+            this.workElementManager.dishovered();
             this.descriptionElementManager.hide();
         });
+
 
         this.getTempId = () => {
             return this.tempId;
@@ -296,7 +305,16 @@ class WorkElementManager {
 
         this.hide = () => {
           this.workElement.classList.add('rotate');
+          this.workElement.classList.remove('hovered');
         };
+
+        this.hovered = () =>{
+          this.workElement.classList.add('hovered');
+        }
+      
+        this.dishovered = () =>{
+          this.workElement.classList.remove('hovered');
+        }
 
         this.setWork = (workData) => {
             this.work.src = this.getWorkUrlWithId(workData.id);
