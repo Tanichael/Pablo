@@ -118,6 +118,27 @@ def add_comment():
   db.session.commit()
   return redirect('/')
 
+@app.route('/like/post/comment=<int:comment_id>&user=<int:user_id>', methods=["POST"])
+
+
+@app.route('/like/get/comment=<int:comment_id>&user=<int:user_id>')
+def like_num_by_comment(comment_id, user_id):
+  likes = db.session.execute(db.select(Like).filter_by(comment_id=comment_id)).scalars().all()
+  likes_num = len(likes)
+  print(likes_num)
+
+  included = False
+  for like in likes:
+    if like.user.id == user_id:
+      included = True
+      break
+  
+  return {
+    "likes_num": likes_num,
+    "is_included": included
+  }
+
+
 class Work(db.Model):
   __tablename__ = "works"
   id = db.Column(db.Integer, primary_key=True)
@@ -145,3 +166,10 @@ class Comment(db.Model):
   user = db.relationship('User')
   work = db.relationship('Work')
 
+class Like(db.Model):
+  __tablename__ = "likes"
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey("users.id", name="fk_user"), nullable=False)
+  comment_id = db.Column(db.Integer, db.ForeignKey("comments.id", name="fk_comment"), nullable=False)
+  user = db.relationship('User')
+  comment = db.relationship('Comment')
