@@ -1,5 +1,5 @@
 import csv
-from pablo_app.__init__ import Creator, Work, User, Comment, db, app
+from pablo_app.__init__ import Creator, Work, User, Comment, Like, db, app
 
 with app.app_context():
     db.create_all()
@@ -31,6 +31,13 @@ with app.app_context():
         for row in reader:
             comment = Comment(user_id=row[1], work_id=row[2], comment=row[3])
             db.session.add(comment)
+
+    with open('likes.csv', newline='', encoding='utf-8') as csv_comments:
+        reader = csv.reader(csv_comments)
+        next(reader)
+        for row in reader:
+            like = Like(user_id=row[1], comment_id=row[2])
+            db.session.add(like)
 
     db.session.commit()
     

@@ -16,11 +16,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     const commentUlBlock = document.getElementById('comment-block-list');
     const commentUlBlockHolder = new CommentUlBlockHolder(connectionClient, commentUlBlock);
 
-    connectionClient.getCommentByWorkId(1).then((comments) => {
+    const tempWorkStr = sessionStorage.getItem('work');
+    const tempWorkData = JSON.parse(tempWorkStr);
+    const tempWorkId = tempWorkData.id;
+    connectionClient.getCommentByWorkId(tempWorkId).then((comments) => {
         console.log(`comments ${JSON.stringify(comments)}`)
         commentUlBlockHolder.setComments(comments);
     });
+
+    //コメント送信処理
+    const commentFormManager = new CommentFormManager();
 });
+
+class CommentFormManager {
+    constructor() {
+        const commentForm = document.getElementById('send-comment-form');
+        const sendCommentButton = document.getElementById('send-comment-button');
+        const commentUserId = document.getElementById('comment-post-user-id');
+        const commentWorkId = document.getElementById('comment-post-work-id');
+        const commentPlace = document.getElementById('comment-from-user');
+
+        sendCommentButton.addEventListener('click', () => {
+            event.preventDefault();
+            const userIdValue = 1; //本来はここでユーザーIDを取得する
+            commentUserId.value = userIdValue;
+            const workStr = sessionStorage.getItem('work');
+            const workData = JSON.parse(workStr);
+            const workIdValue = workData.id;
+            commentWorkId.value = workIdValue;
+            const commentValue = commentPlace.value;
+            //コメントが有効か確認
+            if(commentValue == '') {
+                console.log('コメントが空白です');
+                return;
+            }
+            commentForm.submit();
+        });
+    }
+}
 
 class CommentUlBlockHolder {
     constructor(connectionClient, ulBlock) {
