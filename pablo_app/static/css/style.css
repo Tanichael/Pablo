@@ -1,11 +1,13 @@
 body{
   display: flex;
+  position: relative;
 }
 /* ここからnavigation */
 #navigation-block{
   width:180px;
   /* background: skyblue; */
   display: flex;
+  font-family: 'Shippori Mincho', serif;
   flex-direction: column;
   align-items: center; /* 中央寄せ */
   border-right: 1px solid #ccc;
@@ -188,7 +190,6 @@ body{
 }
 
 
-
 /* ここからコメント */
 #comment-block {
     width: 100%;
@@ -207,7 +208,7 @@ body{
 }
 #comment-block-list::-webkit-scrollbar {
   /* スクロールバー全体のスタイルを設定 */
-    width: 1px; /* スクロールバーの幅 細い方がオシャレだけど操作性が、、、*/
+    width: 2px; /* スクロールバーの幅 細い方がオシャレだけど操作性が、、、*/
 } 
 #comment-block-list::-webkit-scrollbar-track {
   /* スクロールバーのトラック（背景部分）のスタイルを設定 */
@@ -228,18 +229,19 @@ body{
     border-bottom: 5px gray double; */
     border-left: 5px #2d8fdd solid; 
     margin-top: 20px;
+    padding-left: 10px;
 }
 .comment-user{
-  margin-left: 20px;
+  /* margin-left: 20px; */
   /* display:flex; */
 }
 .comment-name{
     /* width: 40%; */
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 .comment-element{
     /* width: 40%; */
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 form{
   display: flex;
