@@ -112,6 +112,7 @@ def add_comment():
   user_id = request.form.get("user_id")
   work_id = request.form.get("work_id")
   comment_content = request.form.get("comment")
+  # print(f'user{user_id}, work{work_id}, comment_content{comment_content}')
   comment = Comment(user_id=user_id, work_id=work_id, comment=comment_content)
   db.session.add(comment)
   db.session.commit()
@@ -143,3 +144,4 @@ class Comment(db.Model):
   comment = db.Column(db.String, nullable=False)
   user = db.relationship('User')
   work = db.relationship('Work')
+
