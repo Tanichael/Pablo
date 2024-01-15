@@ -177,3 +177,6 @@ class Like(db.Model):
   comment_id = db.Column(db.Integer, db.ForeignKey("comments.id", name="fk_comment"), nullable=False)
   user = db.relationship('User')
   comment = db.relationship('Comment')
+
+if __name__ == "__main__":
+  app.run(host='0.0.0.0', port=81)

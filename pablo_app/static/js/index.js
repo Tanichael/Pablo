@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const workBlock = document.getElementById('work-block');
     // const subDescription = document.getElementsByClassName('test');
     const work = document.getElementById('work');
+    // const overlay = document.getElementById('overlay')
 
     const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton);
 
@@ -155,7 +156,7 @@ class WorkBlockManager {
         this.tempId = 1;
         // this.subDescription = subDescription;
       
-        workBlock.appendChild(this.descriptionElementManager.descriptionElement);
+        workElement.appendChild(this.descriptionElementManager.descriptionElement);
 
         this.workElementManager.show();
         this.descriptionElementManager.hide();
@@ -174,9 +175,10 @@ class WorkBlockManager {
 
       //.hideを実行した後に要素の追加削除を行えばいいのではといじってみたのですがなんかうまくいきませんでした
         this.workElementManager.workElement.addEventListener('click', () => {
-            this.workElementManager.hide();
-            this.descriptionElementManager.show();
-            this.workElementManager.dishovered();
+            this.descriptionElementManager.showDescription();
+            // this.workElementManager.hide();
+            // this.descriptionElementManager.show();
+            // this.workElementManager.dishovered();
             // setTimeout(() => {
             // workBlock.insertBefore(this.descriptionElementManager.descriptionElement, workBlock.firstChild);
             // workBlock.removeChild(this.workElementManager.workElement);
@@ -188,10 +190,10 @@ class WorkBlockManager {
 
         this.workElementManager.workElement.addEventListener('mouseover', () =>{
             this.workElementManager.hovered();
-        }) 
+        }) ;
         this.workElementManager.workElement.addEventListener('mouseout', () =>{
             this.workElementManager.dishovered();
-        }) 
+        }) ;
 
         this.descriptionElementManager.descriptionElement.addEventListener('click', () => {
             this.workElementManager.show();
@@ -250,7 +252,10 @@ class DescriptionElementManager {
         console.log("description manager");
         this.descriptionElement = document.createElement('div');
         this.descriptionElement.id = 'text';
-        this.descriptionElement.classList.add('card');
+        // this.descriptionElement.classList.add('card');
+        this.descriptionElement.classList.add('hidden');
+        // this.overlay = document.createElement('div')
+        // this.overlay.id  = 'overlay'
         
         //title要素の作成
         const title = document.createElement('p');
@@ -282,13 +287,18 @@ class DescriptionElementManager {
 
         this.hide = () => {
             // this.descriptionElement.style.display = 'none';
-            this.descriptionElement.classList.add('rotate');
+            // this.descriptionElement.classList.add('rotate');
         }
 
         this.show = () => {
             // this.descriptionElement.style.display = 'block';
-            this.descriptionElement.classList.remove('rotate');
-        }
+            // this.descriptionElement.classList.remove('rotate');
+        };
+
+        this.showDescription = () =>{
+            this.descriptionElement.classList.remove('hidden');
+            this.descriptionElement.classList.add('show');
+        };
 
         this.setWork = (workData) => {
             this.title.textContent = workData.title;
@@ -333,21 +343,21 @@ class WorkElementManager {
       
         this.show = () => {
         // this.workElement.style.display = 'block';
-          this.workElement.classList.remove('rotate');
+          // this.workElement.classList.remove('rotate');
         };
 
         this.hide = () => {
-          this.workElement.classList.add('rotate');
+          // this.workElement.classList.add('rotate');
           this.workElement.classList.remove('hovered');
         };
 
         this.hovered = () =>{
           this.workElement.classList.add('hovered');
-        }
+        };
       
         this.dishovered = () =>{
           this.workElement.classList.remove('hovered');
-        }
+        };
 
         this.setWork = (workData) => {
             this.work.src = this.getWorkUrlWithId(workData.id);
