@@ -124,7 +124,7 @@ class CommentUserHolder {
         this.commentnumber.className = 'comment-number';
 
         this.commentImage.addEventListener('click', async (event) => {
-          likeData = await this.connectionClient.postLike(comment.id);
+          const likeData = await this.connectionClient.postLike(comment.id);
           console.log(`likeData: ${JSON.stringify(likeData)}`);
           this.setLikeData(likeData);
         });
