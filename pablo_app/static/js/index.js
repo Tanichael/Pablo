@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const workBlock = document.getElementById('work-block');
     // const subDescription = document.getElementsByClassName('test');
     const work = document.getElementById('work');
-    // const overlay = document.getElementById('overlay')
+    // const body = document.getElementsByTagName('body');
 
     const workBlockManager = new WorkBlockManager(connectionClient, workBlock, workElement, leftButton, rightButton);
 
@@ -155,8 +155,9 @@ class WorkBlockManager {
         this.descriptionElementManager = new DescriptionElementManager(connectionClient);
         this.tempId = 1;
         // this.subDescription = subDescription;
-      
-        workElement.appendChild(this.descriptionElementManager.descriptionElement);
+
+        // body.appendChild(this.descriptionElementManager.descriptionElement);
+        workBlock.appendChild(this.descriptionElementManager.descriptionElement);
 
         this.workElementManager.show();
         this.descriptionElementManager.hide();
@@ -176,6 +177,7 @@ class WorkBlockManager {
       //.hideを実行した後に要素の追加削除を行えばいいのではといじってみたのですがなんかうまくいきませんでした
         this.workElementManager.workElement.addEventListener('click', () => {
             this.descriptionElementManager.showDescription();
+            this.workElementManager.hovered();
             // this.workElementManager.hide();
             // this.descriptionElementManager.show();
             // this.workElementManager.dishovered();
@@ -195,11 +197,11 @@ class WorkBlockManager {
             this.workElementManager.dishovered();
         }) ;
 
-        this.descriptionElementManager.descriptionElement.addEventListener('click', () => {
-            this.workElementManager.show();
-            this.workElementManager.dishovered();
-            this.descriptionElementManager.hide();
-        });
+        // this.descriptionElementManager.descriptionElement.addEventListener('click', () => {
+        //     this.workElementManager.show();
+        //     this.workElementManager.dishovered();
+        //     this.descriptionElementManager.hide();
+        // });
 
 
         this.getTempId = () => {
@@ -248,15 +250,30 @@ class WorkBlockManager {
 }
 
 class DescriptionElementManager {
-    constructor(connectionClient) {
+    constructor(connectionClient, workElement) {
         console.log("description manager");
+      
+        // this.connectionClient = connectionClient;
+        // this.workElement = workElement;
+        // this.workElementManager = new WorkElementManager(connectionClient, workElement);
+
+        // this.workElementManager = new WorkElementManager(connectionClient, workElement);
+      
         this.descriptionElement = document.createElement('div');
-        this.descriptionElement.id = 'text';
+        this.descriptionElement.id = 'pop_up_cover';
         // this.descriptionElement.classList.add('card');
         this.descriptionElement.classList.add('hidden');
-        // this.overlay = document.createElement('div')
-        // this.overlay.id  = 'overlay'
-        
+        // this.overlay = document.createElement('div')；
+        // this.overlay.id  = 'overlay'；
+
+        const descriptionWindow = document.createElement('div');
+        descriptionWindow.id = 'work-and-description-block';
+        this.descriptionWindow = descriptionWindow;
+      
+        const descriptionWindowText = document.createElement('div');
+        descriptionWindowText.id = 'text-in-description';
+        this.descriptionWindowText = descriptionWindowText;
+      
         //title要素の作成
         const title = document.createElement('p');
         title.id = 'title';
@@ -277,13 +294,61 @@ class DescriptionElementManager {
         // description要素の作成
         const description = document.createElement('p');
         description.id = 'description';
-        description.textContent = 'これはモナリザです。これはレオナルドダヴィンチの作品です。';
+        description.textContent = 'モナリザの最も特徴的な要素は、彼女の微笑みです。これは非常に微妙で神秘的であり、観察者に対して感情の複雑な表現をもたらしています。彼女の眼差しも同様に深く、視線を感じるがどこを見ているのかはっきりしないため、絵画には謎めいた雰囲気が漂っています。モナリザのポーズも注目に値します。彼女は軽く横たわり、観察者に対して軽く微笑みかけながら見つめています。レオナルド・ダ・ヴィンチは、この絵画において達成されたリアリズムと光の効果により、モナリザを生き生きとした存在として描き出しました。';
         this.description = description;
 
-        // 要素をドキュメントに追加
-        this.descriptionElement.appendChild(title);
-        this.descriptionElement.appendChild(creator);
-        this.descriptionElement.appendChild(description);
+        // Year要素の作成
+        const year = document.createElement('p');
+        year.id = 'year';
+        year.textContent = '1503-1519';
+        this.year = year;
+
+        // Museum要素の作成
+        const museum = document.createElement('p');
+        museum.id = 'museum';
+        museum.textContent = 'ルーブル美術館';
+        this.museum = museum;
+
+        // Size要素の作成
+        const size = document.createElement('p');
+        size.id = 'size';
+        size.textContent = '77cm×53cm';
+        this.size = size;
+
+        // Kind要素の作成
+        const kind = document.createElement('p');
+        kind.id = 'kind';
+        kind.textContent = 'ポプラ板に油彩';
+        this.kind = kind;
+      
+        // テキストブロックに子要素を追加
+        this.descriptionWindowText.appendChild(creator);
+        this.descriptionWindowText.appendChild(year);
+        this.descriptionWindowText.appendChild(museum);
+        this.descriptionWindowText.appendChild(size);
+        this.descriptionWindowText.appendChild(kind);
+        this.descriptionWindowText.appendChild(title);
+        this.descriptionWindowText.appendChild(description);
+
+        // 作品画像要素の作成
+        const workInDescriptionBlock = document.createElement('div');
+        workInDescriptionBlock.id = 'work-in-description';
+        this.workInDescriptionBlock= workInDescriptionBlock;
+
+        const workInDescription = document.createElement('img');
+        workInDescription.id = 'work-in-description-img';
+        workInDescription.src = 'img/works/1.jpg';
+        // this.workInDescription.src = this.workElementManager.getWorkUrlWithId(temp.id);
+        workInDescription.alt = 'モナリザ';
+        this.workInDescriotipn = workInDescription;
+
+        // 作品画像を作品ブロックに追加
+        this.workInDescriptionBlock.appendChild(workInDescription);
+
+        // 親要素に子要素を追加
+        this.descriptionWindow.appendChild(descriptionWindowText);
+        this.descriptionWindow.appendChild(workInDescriptionBlock);      
+        this.descriptionElement.appendChild(descriptionWindow);  
 
         this.hide = () => {
             // this.descriptionElement.style.display = 'none';
@@ -300,6 +365,12 @@ class DescriptionElementManager {
             this.descriptionElement.classList.add('show');
         };
 
+
+        this.hideDescription = () =>{
+            this.descriptionElement.classList.remove('show');
+            this.descriptionElement.classList.add('hidden');
+        };
+
         this.setWork = (workData) => {
             this.title.textContent = workData.title;
             this.creator.textContent = workData.creator.name;
@@ -310,6 +381,10 @@ class DescriptionElementManager {
             const workData = e.detail;
             this.setWork(workData);
         });
+
+        this.descriptionElement.addEventListener('click', () => {
+            this.hideDescription();
+         });
     }
 }
 

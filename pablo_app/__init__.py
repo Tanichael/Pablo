@@ -57,7 +57,11 @@ def work(id=1):
         "id": work.creator.id,
         "name": work.creator.name
       },
-      "description": work.description
+      "description": work.description,
+      "year": work.year,
+      "size": work.size,
+      "museum": work.museum,
+      "kind": work.kind
   }
 
 
@@ -76,8 +80,13 @@ def work_random(bef_id):
         "id": work.creator.id,
         "name": work.creator.name
       },
-      "description": work.description
+      "description": work.description,
+      "year": work.year,
+      "size": work.size,
+      "museum": work.museum,
+      "kind": work.kind
   }
+
 
 @app.route('/comment/get/work=<int:work_id>')
 def comments_by_work(work_id):
@@ -149,8 +158,11 @@ class Work(db.Model):
   title = db.Column(db.String, nullable=False)
   creator_id = db.Column(db.Integer, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
   description = db.Column(db.String, nullable=False)
+  year = db.Column(db.String, nullable=False)
+  size = db.Column(db.String, nullable=False)
+  museum = db.Column(db.String, nullable=False)
+  kind = db.Column(db.String, nullable=False)
   creator = db.relationship('Creator')
-
 class Creator(db.Model):
   __tablename__ = "creators"
   id = db.Column(db.Integer, primary_key=True)
