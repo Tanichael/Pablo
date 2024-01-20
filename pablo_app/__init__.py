@@ -15,22 +15,27 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @app.route('/index')
 @login_required
 def index():
   return render_template('index.html')
 
+
 @app.route('/registration')
 def registration():
   return render_template('registration.html')
+
 
 @app.route('/description')
 def description():
   return render_template('description.html')
 
+
 @app.route('/new-description')
 def new_description():
   return render_template('work-and-description.html')
+
 
 @app.route('/comment')
 def comment():
@@ -52,21 +57,25 @@ def img_icon(filename):
 def img_work(filename):
   return send_from_directory('img/works', filename)
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
   if request.method == 'POST':
     user_name = request.form.get('username')
     password = request.form.get('password')
-    users = db.session.execute(db.select(User).filter_by(name=user_name)).scalars().all()
+    users = db.session.execute(
+        db.select(User).filter_by(name=user_name)).scalars().all()
     if users:
       return redirect('login')
     else:
-      user = User(name=user_name, password=generate_password_hash(password, method='sha256'))
+      user = User(name=user_name,
+                  password=generate_password_hash(password, method='sha256'))
       db.session.add(user)
       db.session.commit()
       return redirect('login')
   else:
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -82,15 +91,17 @@ def login():
         return redirect('login')
     else:
       return redirect('login')
-      
+
   else:
     return render_template('login.html')
-  
+
+
 @app.route('/logout')
 @login_required
 def logout():
   logout_user()
   return redirect('login')
+
 
 #API
 @app.route('/work/<int:id>')
@@ -105,8 +116,8 @@ def work(id=1):
       "id": work.id,
       "title": work.title,
       "creator": {
-        "id": work.creator.id,
-        "name": work.creator.name
+          "id": work.creator.id,
+          "name": work.creator.name
       },
       "description": work.description,
       "year": work.year,
@@ -129,8 +140,8 @@ def work_random(bef_id):
       "id": work.id,
       "title": work.title,
       "creator": {
-        "id": work.creator.id,
-        "name": work.creator.name
+          "id": work.creator.id,
+          "name": work.creator.name
       },
       "description": work.description,
       "year": work.year,
@@ -143,37 +154,37 @@ def work_random(bef_id):
 @app.route('/comment/get/work=<int:work_id>')
 @login_required
 def comments_by_work(work_id):
-  comments = db.session.execute(db.select(Comment).filter_by(work_id=work_id)).scalars().all()
+  comments = db.session.execute(
+      db.select(Comment).filter_by(work_id=work_id)).scalars().all()
   comment_list = []
   for comment in comments:
-    comment_list.append(
-      {
+    comment_list.append({
         "id": comment.id,
         "user_id": comment.user_id,
         "work_id": comment.work_id,
         "comment": comment.comment,
         "user_name": comment.user.name,
-      }
-    )
+    })
   return comment_list
+
 
 @app.route('/comment/get')
 @login_required
 def comments_by_user():
   user_id = current_user.id
-  comments = db.session.execute(db.select(Comment).filter_by(user_id=user_id)).scalars().all()
+  comments = db.session.execute(
+      db.select(Comment).filter_by(user_id=user_id)).scalars().all()
   comment_list = []
   for comment in comments:
-    comment_list.append(
-      {
+    comment_list.append({
         "id": comment.id,
         "user_id": comment.user_id,
         "work_id": comment.work_id,
         "comment": comment.comment,
         "user_name": comment.user.name
-      }
-    )
+    })
   return comment_list
+
 
 @app.route('/comment/post', methods=["POST"])
 @login_required
@@ -188,13 +199,16 @@ def add_comment():
   db.session.commit()
   return redirect('/index')
 
+
 @login_required
 @app.route('/like/post', methods=["POST"])
 def like_post():
   user_id = current_user.id
   comment_id = request.form.get("comment_id")
-  
-  likes = db.session.execute(db.select(Like).filter_by(user_id=user_id, comment_id=comment_id)).scalars().all()
+
+  likes = db.session.execute(
+      db.select(Like).filter_by(user_id=user_id,
+                                comment_id=comment_id)).scalars().all()
 
   if likes:
     # 削除
@@ -208,13 +222,15 @@ def like_post():
     like = Like(user_id=user_id, comment_id=comment_id)
     db.session.add(like)
     db.session.commit()
-  
+
   return like_num_by_comment(comment_id)
+
 
 @app.route('/like/get/comment=<int:comment_id>')
 def like_num_by_comment(comment_id):
   user_id = current_user.id
-  likes = db.session.execute(db.select(Like).filter_by(comment_id=comment_id)).scalars().all()
+  likes = db.session.execute(
+      db.select(Like).filter_by(comment_id=comment_id)).scalars().all()
   likes_num = len(likes)
   print(likes_num)
 
@@ -223,28 +239,30 @@ def like_num_by_comment(comment_id):
     if like.user.id == user_id:
       included = True
       break
-  
-  return {
-    "likes_num": likes_num,
-    "is_included": included
-  }
+
+  return {"likes_num": likes_num, "is_included": included}
 
 
 class Work(db.Model):
   __tablename__ = "works"
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String, nullable=False)
-  creator_id = db.Column(db.Integer, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
+  creator_id = db.Column(db.Integer,
+                         db.ForeignKey("creators.id", name="fk_creator"),
+                         nullable=False)
   description = db.Column(db.String, nullable=False)
   year = db.Column(db.String, nullable=False)
   size = db.Column(db.String, nullable=False)
   museum = db.Column(db.String, nullable=False)
   kind = db.Column(db.String, nullable=False)
   creator = db.relationship('Creator')
+
+
 class Creator(db.Model):
   __tablename__ = "creators"
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String, nullable=False)
+
 
 class User(UserMixin, db.Model):
   __tablename__ = "users"
@@ -252,26 +270,38 @@ class User(UserMixin, db.Model):
   name = db.Column(db.String(50), nullable=False, unique=True)
   password = db.Column(db.String(25))
 
+
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
 
+
 class Comment(db.Model):
   __tablename__ = "comments"
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey("users.id", name="fk_user"), nullable=False)
-  work_id = db.Column(db.Integer, db.ForeignKey("works.id", name="fk_work"), nullable=False)
+  user_id = db.Column(db.Integer,
+                      db.ForeignKey("users.id", name="fk_user"),
+                      nullable=False)
+  work_id = db.Column(db.Integer,
+                      db.ForeignKey("works.id", name="fk_work"),
+                      nullable=False)
   comment = db.Column(db.String, nullable=False)
   user = db.relationship('User')
   work = db.relationship('Work')
 
+
 class Like(db.Model):
   __tablename__ = "likes"
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey("users.id", name="fk_user"), nullable=False)
-  comment_id = db.Column(db.Integer, db.ForeignKey("comments.id", name="fk_comment"), nullable=False)
+  user_id = db.Column(db.Integer,
+                      db.ForeignKey("users.id", name="fk_user"),
+                      nullable=False)
+  comment_id = db.Column(db.Integer,
+                         db.ForeignKey("comments.id", name="fk_comment"),
+                         nullable=False)
   user = db.relationship('User')
   comment = db.relationship('Comment')
+
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', port=81)
