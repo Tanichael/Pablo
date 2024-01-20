@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 縦方向の中央揃え */
+    align-items: center; /* 水平方向の中央揃え */
+    height: 100vh; /* ビューポートの高さに合わせる */
+    background-color: #f7f7f7;
+}
+
+.main-content {
+    width: 350px; /* または必要に応じて調整 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 150px; /* 追加：外側の余白を設定 */
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: #666;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+a {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #337ab7;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+body {
+    flex-direction: column; /* フレックスアイテムを縦方向に並べる */
+    justify-content: space-between; /* 上下の要素をページの端に配置 */
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-link {
+    display: block;
+    margin-top: 20px; /* フォームとの間の余白を調整 */
+    text-align: center;
+    color: #337ab7;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}

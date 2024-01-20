@@ -57,10 +57,14 @@ def signup():
   if request.method == 'POST':
     user_name = request.form.get('username')
     password = request.form.get('password')
-    user = User(name=user_name, password=generate_password_hash(password, method='sha256'))
-    db.session.add(user)
-    db.session.commit()
-    return redirect('login')
+    users = db.session.execute(db.select(User).filter_by(name=user_name)).scalars().all()
+    if users:
+      return redirect('login')
+    else:
+      user = User(name=user_name, password=generate_password_hash(password, method='sha256'))
+      db.session.add(user)
+      db.session.commit()
+      return redirect('login')
   else:
     return render_template('signup.html')
 
@@ -70,9 +74,15 @@ def login():
     user_name = request.form.get('username')
     password = request.form.get('password')
     user = User.query.filter_by(name=user_name).first()
-    if check_password_hash(user.password, password):
-      login_user(user)
-      return redirect('index')
+    if user:
+      if check_password_hash(user.password, password):
+        login_user(user)
+        return redirect('index')
+      else:
+        return redirect('login')
+    else:
+      return redirect('login')
+      
   else:
     return render_template('login.html')
   
