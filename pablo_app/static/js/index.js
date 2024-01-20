@@ -89,7 +89,7 @@ class CommentUlBlockHolder {
                 li.className = 'comment';
                 const commentUserDiv = document.createElement('div');
                 commentUserDiv.className = "comment-user";
-                const commentUserHolder = new CommentUserHolder(commentUserDiv, comment);
+                const commentUserHolder = new CommentUserHolder(connectionClient, commentUserDiv, comment);
                 li.appendChild(commentUserDiv);
                 this.ulBlock.appendChild(li);
             });
@@ -104,20 +104,68 @@ class CommentUlBlockHolder {
 }
 
 class CommentUserHolder {
-    constructor(commentBlock, comment) {
+    constructor(connectionClient, commentBlock, comment) {
+        this.connectionClient = connectionClient;
         this.commentBlock = commentBlock;
-
+        //this.likesblock = likesblock;
         this.commentNameDiv = document.createElement('div');
         this.commentNameDiv.className = 'comment-name';
         this.commentNameDiv.textContent = comment.user_name;
-      
+
         this.commentElementDiv = document.createElement('div');
         this.commentElementDiv.className = 'comment-element';
         this.commentElementDiv.textContent = comment.comment; 
+
+        this.commentImage = document.createElement('img');
+        this.commentImage.className = 'comment-image';
+        //this.commentImage.src = "../img/works/80036947.png"; 
+
+        this.commentnumber = document.createElement('div');
+        this.commentnumber.className = 'comment-number';
+
+        this.commentImage.addEventListener('click', async (event) => {
+          likeData = await this.connectionClient.postLike(comment.id);
+          console.log(`likeData: ${JSON.stringify(likeData)}`);
+          this.setLikeData(likeData);
+        });
+      
+        this.getlikes = async () => {
+          const likeUrl = '/like/get/comment='+comment.id;
+          const likeResponse = await fetch(likeUrl);
+          if(!likeResponse.ok) {
+              throw new Error('error');
+          }
+          const likeData = await likeResponse.json();
+          console.log(`likedata: ${JSON.stringify(likeData)}`);
+          this.setLikeData(likeData);
+        };
+
+        this.setLikeData = (likeData) => {
+          const likesNum = parseInt(likeData.likes_num, 10);
+          const isIncluded = likeData.is_included;
+          console.log(likesNum);
+          this.commentnumber.textContent = likesNum;
+          console.log(typeof isIncluded);
+          if (isIncluded===false) {
+              this.commentImage.src = "../img/icons/80036947.png"; 
+              console.log(isIncluded);
+          }else{
+              this.commentImage.src = "../img/icons/無題19_20240120223246.PNG";
+          }
+        }
         
+        this.getlikes(); 
+        this.commentImage.style.display = 'inline-block';
+        this.commentnumber.style.display = 'inline-block';
+        //this.likesblock.appendChild(this.commentImage);
+        //this.likesblock.appendChild(this.commentnumber);
         this.commentBlock.appendChild(this.commentNameDiv);
         this.commentBlock.appendChild(this.commentElementDiv);
-    }
+        //this.commentBlock.appendChild(this.likesblock);
+
+        this.commentBlock.appendChild(this.commentImage);
+        this.commentBlock.appendChild(this.commentnumber);
+      }
 }
 
 class ConnectionClient {
@@ -276,6 +324,7 @@ class WorkBlockManager {
             } else {
                 console.log("no cache");
                 const randWorkData = await this.getRandWork(0);
+                this.cacheWork(randWorkData);
                 return randWorkData;
             }
         }
@@ -286,11 +335,9 @@ class DescriptionElementManager {
     constructor(connectionClient, workElement) {
         console.log("description manager");
       
-        // this.connectionClient = connectionClient;
-        // this.workElement = workElement;
-        // this.workElementManager = new WorkElementManager(connectionClient, workElement);
-
-        // this.workElementManager = new WorkElementManager(connectionClient, workElement);
+        this.connectionClient = connectionClient;
+        this.workElement = workElement;
+        // this.workElementManager = WorkElementManager(connectionClient, workElement);
       
         this.descriptionElement = document.createElement('div');
         this.descriptionElement.id = 'pop_up_cover';
@@ -370,10 +417,10 @@ class DescriptionElementManager {
 
         const workInDescription = document.createElement('img');
         workInDescription.id = 'work-in-description-img';
-        workInDescription.src = 'img/works/1.jpg';
-        // this.workInDescription.src = this.workElementManager.getWorkUrlWithId(temp.id);
+        // workInDescription.src = 'img/works/1.jpg';
+        // this.workInDescription.src = this.getWorkUrlWithId(this.workData.id);
         workInDescription.alt = 'モナリザ';
-        this.workInDescriotipn = workInDescription;
+        this.workInDescription = workInDescription;
 
         // 作品画像を作品ブロックに追加
         this.workInDescriptionBlock.appendChild(workInDescription);
@@ -405,9 +452,20 @@ class DescriptionElementManager {
         };
 
         this.setWork = (workData) => {
+            this.workInDescription.src = this.getWorkUrlWithId(workData.id);
             this.title.textContent = workData.title;
             this.creator.textContent = workData.creator.name;
             this.description.textContent = workData.description;
+            this.year.textContent = workData.year;
+            this.description.textContent = workData.description;
+            this.year.textContent = workData.year;
+            this.museum.textContent = workData.museum;
+            this.size.textContent = workData.size;
+            this.kind.textContent = workData.kind;
+        }
+
+        this.getWorkUrlWithId = (id) => {
+            return "../img/works/" + id + ".jpg";
         }
 
         document.addEventListener('work-cached', (e) => {
