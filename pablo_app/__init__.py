@@ -2,17 +2,27 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 from flask_restx import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 import random
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 db = SQLAlchemy()
 app = Flask(__name__, static_folder="./static/")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+app.config['SECRET_KEY'] = os.urandom(24)
 db.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-
-@app.route('/')
+@app.route('/index')
+@login_required
 def index():
   return render_template('index.html')
 
+@app.route('/registration')
+def registration():
+  return render_template('registration.html')
 
 @app.route('/description')
 def description():
@@ -42,8 +52,49 @@ def img_icon(filename):
 def img_work(filename):
   return send_from_directory('img/works', filename)
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+  if request.method == 'POST':
+    user_name = request.form.get('username')
+    password = request.form.get('password')
+    users = db.session.execute(db.select(User).filter_by(name=user_name)).scalars().all()
+    if users:
+      return redirect('login')
+    else:
+      user = User(name=user_name, password=generate_password_hash(password, method='sha256'))
+      db.session.add(user)
+      db.session.commit()
+      return redirect('login')
+  else:
+    return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  if request.method == "POST":
+    user_name = request.form.get('username')
+    password = request.form.get('password')
+    user = User.query.filter_by(name=user_name).first()
+    if user:
+      if check_password_hash(user.password, password):
+        login_user(user)
+        return redirect('index')
+      else:
+        return redirect('login')
+    else:
+      return redirect('login')
+      
+  else:
+    return render_template('login.html')
+  
+@app.route('/logout')
+@login_required
+def logout():
+  logout_user()
+  return redirect('login')
+
 #API
 @app.route('/work/<int:id>')
+@login_required
 def work(id=1):
   works = db.session.execute(db.select(Work)).scalars().all()
   if id <= 0 or id > len(works):
@@ -66,6 +117,7 @@ def work(id=1):
 
 
 @app.route('/work/random/<int:bef_id>')
+@login_required
 def work_random(bef_id):
   works = db.session.execute(db.select(Work)).scalars().all()
   rand_id = bef_id
@@ -89,6 +141,7 @@ def work_random(bef_id):
 
 
 @app.route('/comment/get/work=<int:work_id>')
+@login_required
 def comments_by_work(work_id):
   comments = db.session.execute(db.select(Comment).filter_by(work_id=work_id)).scalars().all()
   comment_list = []
@@ -104,8 +157,10 @@ def comments_by_work(work_id):
     )
   return comment_list
 
-@app.route('/comment/get/user=<int:user_id>')
-def comments_by_user(user_id):
+@app.route('/comment/get')
+@login_required
+def comments_by_user():
+  user_id = current_user.id
   comments = db.session.execute(db.select(Comment).filter_by(user_id=user_id)).scalars().all()
   comment_list = []
   for comment in comments:
@@ -121,21 +176,44 @@ def comments_by_user(user_id):
   return comment_list
 
 @app.route('/comment/post', methods=["POST"])
+@login_required
 def add_comment():
-  user_id = request.form.get("user_id")
+  # user_id = request.form.get("user_id")
+  user_id = current_user.id
   work_id = request.form.get("work_id")
   comment_content = request.form.get("comment")
-  # print(f'user{user_id}, work{work_id}, comment_content{comment_content}')
+  print(f'user{user_id}, work{work_id}, comment_content{comment_content}')
   comment = Comment(user_id=user_id, work_id=work_id, comment=comment_content)
   db.session.add(comment)
   db.session.commit()
-  return redirect('/')
+  return redirect('/index')
 
-@app.route('/like/post/comment=<int:comment_id>&user=<int:user_id>', methods=["POST"])
+@login_required
+@app.route('/like/post', methods=["POST"])
+def like_post():
+  user_id = current_user.id
+  comment_id = request.form.get("comment_id")
+  
+  likes = db.session.execute(db.select(Like).filter_by(user_id=user_id, comment_id=comment_id)).scalars().all()
 
+  if likes:
+    # 削除
+    print('delete')
+    like = likes[0]
+    db.session.delete(like)
+    db.session.commit()
+  else:
+    # 追加
+    print('add')
+    like = Like(user_id=user_id, comment_id=comment_id)
+    db.session.add(like)
+    db.session.commit()
+  
+  return like_num_by_comment(comment_id)
 
-@app.route('/like/get/comment=<int:comment_id>&user=<int:user_id>')
-def like_num_by_comment(comment_id, user_id):
+@app.route('/like/get/comment=<int:comment_id>')
+def like_num_by_comment(comment_id):
+  user_id = current_user.id
   likes = db.session.execute(db.select(Like).filter_by(comment_id=comment_id)).scalars().all()
   likes_num = len(likes)
   print(likes_num)
@@ -168,10 +246,15 @@ class Creator(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String, nullable=False)
 
-class User(db.Model):
+class User(UserMixin, db.Model):
   __tablename__ = "users"
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String, nullable=False)
+  name = db.Column(db.String(50), nullable=False, unique=True)
+  password = db.Column(db.String(25))
+
+@login_manager.user_loader
+def load_user(user_id):
+  return User.query.get(int(user_id))
 
 class Comment(db.Model):
   __tablename__ = "comments"
