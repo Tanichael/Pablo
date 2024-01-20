@@ -8,7 +8,7 @@ with app.app_context():
         reader = csv.reader(csv_works)
         next(reader)
         for row in reader:
-            work = Work(title=row[1], creator_id=row[2], description=row[3])
+            work = Work(title=row[1], creator_id=row[2], description=row[3], year=row[4], size=row[5], museum=row[6], kind=row[7])
             db.session.add(work)
 
     with open('creators.csv', newline='', encoding='utf-8') as csv_creators:

@@ -16,8 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const commentUlBlock = document.getElementById('comment-block-list');
     const commentUlBlockHolder = new CommentUlBlockHolder(connectionClient, commentUlBlock);
 
-    const tempWorkStr = sessionStorage.getItem('work');
-    const tempWorkData = JSON.parse(tempWorkStr);
+    const tempWorkData = await workBlockManager.getCachedWork();
     const tempWorkId = tempWorkData.id;
     connectionClient.getCommentByWorkId(tempWorkId).then((comments) => {
         console.log(`comments ${JSON.stringify(comments)}`)
@@ -26,6 +25,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     //コメント送信処理
     const commentFormManager = new CommentFormManager();
+
+    //Debug
+    // document.addEventListener('keydown', async (event) => {
+    //     if(event.key === 't') {
+    //         likeData = await connectionClient.postLike(1);
+    //         console.log(`likeData: ${JSON.stringify(likeData)}`);
+    //     }
+    // });
 });
 
 class CommentFormManager {
@@ -36,9 +43,20 @@ class CommentFormManager {
         const commentWorkId = document.getElementById('comment-post-work-id');
         const commentPlace = document.getElementById('comment-from-user');
 
-        sendCommentButton.addEventListener('click', () => {
+        commentPlace.addEventListener('keydown', (event) => {
+            if(event.key === 'Enter') {
+                event.preventDefault();
+                this.postForm();
+            }
+        });
+
+        sendCommentButton.addEventListener('click', (event) => {
             event.preventDefault();
-            const userIdValue = 1; //本来はここでユーザーIDを取得する
+            this.postForm();
+        });
+
+        this.postForm = () => {
+            const userIdValue = 1; //本来はここでユーザーIDを取得する -> flask側で処理するので不要
             commentUserId.value = userIdValue;
             const workStr = sessionStorage.getItem('work');
             const workData = JSON.parse(workStr);
@@ -51,7 +69,7 @@ class CommentFormManager {
                 return;
             }
             commentForm.submit();
-        });
+        }
     }
 }
 
@@ -144,6 +162,21 @@ class ConnectionClient {
             const commentData = await commentResponse.json();
             return commentData;
         }
+
+        this.postLike = async(commentId) => {
+            const postLikeUrl = '/like/post';
+            const formData = new FormData();
+            formData.append('comment_id', commentId);
+            const likeResponse = await fetch(postLikeUrl, {
+                method: "POST",
+                body: formData
+            });
+            if(!likeResponse.ok) {
+                throw new Error('error');
+            }
+            const likeData = await likeResponse.json();
+            return likeData;
+        }
     }
 }
 
@@ -233,7 +266,7 @@ class WorkBlockManager {
             const workStr = sessionStorage.getItem('work');
             const workData = JSON.parse(workStr);
             if(workData) {
-                console.log(`workdata: ${JSON.stringify(workData)}`);
+                // console.log(`workdata: ${JSON.stringify(workData)}`);
                 this.workElementManager.setWork(workData);
                 return workData;
             } else {

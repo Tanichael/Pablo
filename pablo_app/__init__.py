@@ -98,7 +98,11 @@ def work(id=1):
         "id": work.creator.id,
         "name": work.creator.name
       },
-      "description": work.description
+      "description": work.description,
+      "year": work.year,
+      "size": work.size,
+      "museum": work.museum,
+      "kind": work.kind
   }
 
 
@@ -118,7 +122,11 @@ def work_random(bef_id):
         "id": work.creator.id,
         "name": work.creator.name
       },
-      "description": work.description
+      "description": work.description,
+      "year": work.year,
+      "size": work.size,
+      "museum": work.museum,
+      "kind": work.kind
   }
 
 @app.route('/comment/get/work=<int:work_id>')
@@ -169,8 +177,28 @@ def add_comment():
   db.session.commit()
   return redirect('/index')
 
-@app.route('/like/post/comment=<int:comment_id>&user=<int:user_id>', methods=["POST"])
+@login_required
+@app.route('/like/post', methods=["POST"])
+def like_post():
+  user_id = current_user.id
+  comment_id = request.form.get("comment_id")
+  
+  likes = db.session.execute(db.select(Like).filter_by(user_id=user_id, comment_id=comment_id)).scalars().all()
 
+  if likes:
+    # 削除
+    print('delete')
+    like = likes[0]
+    db.session.delete(like)
+    db.session.commit()
+  else:
+    # 追加
+    print('add')
+    like = Like(user_id=user_id, comment_id=comment_id)
+    db.session.add(like)
+    db.session.commit()
+  
+  return like_num_by_comment(comment_id)
 
 @app.route('/like/get/comment=<int:comment_id>')
 def like_num_by_comment(comment_id):
@@ -197,6 +225,10 @@ class Work(db.Model):
   title = db.Column(db.String, nullable=False)
   creator_id = db.Column(db.Integer, db.ForeignKey("creators.id", name="fk_creator"), nullable=False)
   description = db.Column(db.String, nullable=False)
+  year = db.Column(db.String, nullable=False)
+  size = db.Column(db.String, nullable=False)
+  museum = db.Column(db.String, nullable=False)
+  kind = db.Column(db.String, nullable=False)
   creator = db.relationship('Creator')
 
 class Creator(db.Model):
