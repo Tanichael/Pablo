@@ -139,6 +139,7 @@ def work_random(bef_id):
       "kind": work.kind
   }
 
+
 @app.route('/comment/get/work=<int:work_id>')
 @login_required
 def comments_by_work(work_id):
@@ -240,7 +241,6 @@ class Work(db.Model):
   museum = db.Column(db.String, nullable=False)
   kind = db.Column(db.String, nullable=False)
   creator = db.relationship('Creator')
-
 class Creator(db.Model):
   __tablename__ = "creators"
   id = db.Column(db.Integer, primary_key=True)
@@ -272,3 +272,6 @@ class Like(db.Model):
   comment_id = db.Column(db.Integer, db.ForeignKey("comments.id", name="fk_comment"), nullable=False)
   user = db.relationship('User')
   comment = db.relationship('Comment')
+
+if __name__ == "__main__":
+  app.run(host='0.0.0.0', port=81)
